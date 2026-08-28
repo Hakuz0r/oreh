@@ -18,7 +18,10 @@
   <header class="header">
     <div class="header__inner">
       <a href="index.html" class="header__logo">
-        <img src="assets/logo-dark.png" alt="OREH" class="header__logo-icon" />
+        <picture>
+          <source srcset="assets/logo-dark.webp" type="image/webp" />
+          <img src="assets/logo-dark.png" alt="OREH" class="header__logo-icon" />
+        </picture>
         <span class="header__logo-text">OREH</span>
       </a>
 
@@ -65,36 +68,72 @@
 
     <div class="gallery">
       <div class="gallery__main">
-        <img src="assets/detail-angle.jpg" alt="TriaMotion, сложенная рама" class="gallery__image is-active" data-gallery-image="0" />
-        <img src="assets/bench-flat.jpg" alt="TriaMotion, рама сбоку" class="gallery__image" data-gallery-image="1" />
-        <img src="assets/tria-side.jpg" alt="TriaMotion, положение скамьи" class="gallery__image" data-gallery-image="2" />
-        <img src="assets/detail-cushion.jpg" alt="TriaMotion, скамья под углом" class="gallery__image" data-gallery-image="3" />
-        <img src="assets/detail-hinge.jpg" alt="TriaMotion, станок для пресса" class="gallery__image" data-gallery-image="4" />
-        <img src="assets/tria-folded.jpg" alt="TriaMotion, наклон и валик" class="gallery__image" data-gallery-image="5" />
+        <picture>
+          <source srcset="assets/detail-angle.webp" type="image/webp" />
+          <img src="assets/detail-angle.jpg" alt="TriaMotion, сложенная рама" class="gallery__image is-active" data-gallery-image="0" />
+        </picture>
+        <picture>
+          <source srcset="assets/bench-flat.webp" type="image/webp" />
+          <img src="assets/bench-flat.jpg" alt="TriaMotion, рама сбоку" class="gallery__image" data-gallery-image="1" loading="lazy" />
+        </picture>
+        <picture>
+          <source srcset="assets/tria-side.webp" type="image/webp" />
+          <img src="assets/tria-side.jpg" alt="TriaMotion, положение скамьи" class="gallery__image" data-gallery-image="2" loading="lazy" />
+        </picture>
+        <picture>
+          <source srcset="assets/detail-cushion.webp" type="image/webp" />
+          <img src="assets/detail-cushion.jpg" alt="TriaMotion, скамья под углом" class="gallery__image" data-gallery-image="3" loading="lazy" />
+        </picture>
+        <picture>
+          <source srcset="assets/detail-hinge.webp" type="image/webp" />
+          <img src="assets/detail-hinge.jpg" alt="TriaMotion, станок для пресса" class="gallery__image" data-gallery-image="4" loading="lazy" />
+        </picture>
+        <picture>
+          <source srcset="assets/tria-folded.webp" type="image/webp" />
+          <img src="assets/tria-folded.jpg" alt="TriaMotion, наклон и валик" class="gallery__image" data-gallery-image="5" loading="lazy" />
+        </picture>
       </div>
       <div class="gallery__thumbs">
         <button type="button" class="gallery__thumb is-active" aria-label="Фото 1" data-gallery-thumb="0">
-          <img src="assets/detail-angle.jpg" alt="" class="gallery__thumb-image" />
+          <picture>
+            <source srcset="assets/detail-angle.webp" type="image/webp" />
+            <img src="assets/detail-angle.jpg" alt="" class="gallery__thumb-image" />
+          </picture>
           <span class="gallery__thumb-ring"></span>
         </button>
         <button type="button" class="gallery__thumb" aria-label="Фото 2" data-gallery-thumb="1">
-          <img src="assets/bench-flat.jpg" alt="" class="gallery__thumb-image" />
+          <picture>
+            <source srcset="assets/bench-flat.webp" type="image/webp" />
+            <img src="assets/bench-flat.jpg" alt="" class="gallery__thumb-image" loading="lazy" />
+          </picture>
           <span class="gallery__thumb-ring"></span>
         </button>
         <button type="button" class="gallery__thumb" aria-label="Фото 3" data-gallery-thumb="2">
-          <img src="assets/tria-side.jpg" alt="" class="gallery__thumb-image" />
+          <picture>
+            <source srcset="assets/tria-side.webp" type="image/webp" />
+            <img src="assets/tria-side.jpg" alt="" class="gallery__thumb-image" loading="lazy" />
+          </picture>
           <span class="gallery__thumb-ring"></span>
         </button>
         <button type="button" class="gallery__thumb" aria-label="Фото 4" data-gallery-thumb="3">
-          <img src="assets/detail-cushion.jpg" alt="" class="gallery__thumb-image" />
+          <picture>
+            <source srcset="assets/detail-cushion.webp" type="image/webp" />
+            <img src="assets/detail-cushion.jpg" alt="" class="gallery__thumb-image" loading="lazy" />
+          </picture>
           <span class="gallery__thumb-ring"></span>
         </button>
         <button type="button" class="gallery__thumb" aria-label="Фото 5" data-gallery-thumb="4">
-          <img src="assets/detail-hinge.jpg" alt="" class="gallery__thumb-image" />
+          <picture>
+            <source srcset="assets/detail-hinge.webp" type="image/webp" />
+            <img src="assets/detail-hinge.jpg" alt="" class="gallery__thumb-image" loading="lazy" />
+          </picture>
           <span class="gallery__thumb-ring"></span>
         </button>
         <button type="button" class="gallery__thumb" aria-label="Фото 6" data-gallery-thumb="5">
-          <img src="assets/tria-folded.jpg" alt="" class="gallery__thumb-image" />
+          <picture>
+            <source srcset="assets/tria-folded.webp" type="image/webp" />
+            <img src="assets/tria-folded.jpg" alt="" class="gallery__thumb-image" loading="lazy" />
+          </picture>
           <span class="gallery__thumb-ring"></span>
         </button>
       </div>
@@ -151,10 +190,30 @@
         <p class="about__text">В сложенном виде рама занимает место обычной табуретки — оборудование рассчитано на домашние тренировки и небольшие студии.</p>
       </div>
       <div class="about__gallery">
-        <div class="about__gallery-item"><img src="assets/detail-latch.jpg" alt="Регулировка угла по сектору" /></div>
-        <div class="about__gallery-item"><img src="assets/detail-roller.jpg" alt="Стальной шарнир" /></div>
-        <div class="about__gallery-item"><img src="assets/bench-side.jpg" alt="Кожаные подушки" /></div>
-        <div class="about__gallery-item"><img src="assets/detail-protractor.jpg" alt="Фиксатор рамы" /></div>
+        <div class="about__gallery-item">
+          <picture>
+            <source srcset="assets/detail-latch.webp" type="image/webp" />
+            <img src="assets/detail-latch.jpg" alt="Регулировка угла по сектору" loading="lazy" />
+          </picture>
+        </div>
+        <div class="about__gallery-item">
+          <picture>
+            <source srcset="assets/detail-roller.webp" type="image/webp" />
+            <img src="assets/detail-roller.jpg" alt="Стальной шарнир" loading="lazy" />
+          </picture>
+        </div>
+        <div class="about__gallery-item">
+          <picture>
+            <source srcset="assets/bench-side.webp" type="image/webp" />
+            <img src="assets/bench-side.jpg" alt="Кожаные подушки" loading="lazy" />
+          </picture>
+        </div>
+        <div class="about__gallery-item">
+          <picture>
+            <source srcset="assets/detail-protractor.webp" type="image/webp" />
+            <img src="assets/detail-protractor.jpg" alt="Фиксатор рамы" loading="lazy" />
+          </picture>
+        </div>
       </div>
     </div>
   </section>
@@ -172,7 +231,10 @@
   <footer class="footer">
     <div class="footer__inner">
       <div class="footer__brand">
-        <img src="assets/logo-light.png" alt="OREH" class="footer__logo" />
+        <picture>
+          <source srcset="assets/logo-light.webp" type="image/webp" />
+          <img src="assets/logo-light.png" alt="OREH" class="footer__logo" loading="lazy" />
+        </picture>
         <span class="footer__brand-text">OREH</span>
       </div>
       <nav class="footer__nav">
@@ -191,6 +253,6 @@
     </div>
   </footer>
 
-  <script src="js/main.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>

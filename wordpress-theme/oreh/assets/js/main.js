@@ -1,9 +1,7 @@
 import { initMobileMenu } from './modules/mobile-menu.js';
-import { initContactForm } from './modules/contact-form.js';
 import { initProductGallery } from './modules/product-gallery.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initMobileMenu();
-  initContactForm();
   initProductGallery();
 });

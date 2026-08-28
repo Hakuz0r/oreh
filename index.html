@@ -18,7 +18,10 @@
   <header class="header">
     <div class="header__inner">
       <a href="#top" class="header__logo">
-        <img src="assets/logo-dark.png" alt="OREH" class="header__logo-icon" />
+        <picture>
+          <source srcset="assets/logo-dark.webp" type="image/webp" />
+          <img src="assets/logo-dark.png" alt="OREH" class="header__logo-icon" />
+        </picture>
         <span class="header__logo-text">OREH</span>
       </a>
 
@@ -78,7 +81,10 @@
 
         <article class="product-card">
           <div class="product-card__media">
-            <img src="assets/tria-side.jpg" alt="Товар 2" class="product-card__image" />
+            <picture>
+              <source srcset="assets/tria-side.webp" type="image/webp" />
+              <img src="assets/tria-side.jpg" alt="Товар 2" class="product-card__image" loading="lazy" />
+            </picture>
           </div>
           <div class="product-card__body">
             <h3 class="product-card__title">Товар 2</h3>
@@ -92,7 +98,10 @@
 
         <article class="product-card">
           <div class="product-card__media">
-            <img src="assets/detail-angle.jpg" alt="TriaMotion" class="product-card__image" />
+            <picture>
+              <source srcset="assets/detail-angle.webp" type="image/webp" />
+              <img src="assets/detail-angle.jpg" alt="TriaMotion" class="product-card__image" loading="lazy" />
+            </picture>
           </div>
           <div class="product-card__body">
             <h3 class="product-card__title">TriaMotion</h3>
@@ -114,7 +123,10 @@
         <h2 class="why__title">Почему мы</h2>
         <p class="why__text">Оборудование собирается вручную из массива ясеня и натуральной кожи. Никакого пластика, никаких лишних деталей.</p>
         <div class="why__image">
-          <img src="assets/detail-hinge.jpg" alt="Скамья OREH" />
+          <picture>
+            <source srcset="assets/detail-hinge.webp" type="image/webp" />
+            <img src="assets/detail-hinge.jpg" alt="Скамья OREH" loading="lazy" />
+          </picture>
         </div>
       </div>
       <div class="why__list">
@@ -195,7 +207,10 @@
   <footer class="footer">
     <div class="footer__inner">
       <div class="footer__brand">
-        <img src="assets/logo-light.png" alt="OREH" class="footer__logo" />
+        <picture>
+          <source srcset="assets/logo-light.webp" type="image/webp" />
+          <img src="assets/logo-light.png" alt="OREH" class="footer__logo" loading="lazy" />
+        </picture>
         <span class="footer__brand-text">OREH</span>
       </div>
       <nav class="footer__nav">
@@ -214,6 +229,6 @@
     </div>
   </footer>
 
-  <script src="js/main.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>

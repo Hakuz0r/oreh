@@ -1,0 +1,164 @@
+/* ==========================================================================
+   OREH — адаптив
+   Брейкпоинты: 1200 / 979 (переключение навигации) / 680 / 480 / 360
+   Основная типографика/отступы уже фluid (clamp) в style.css — здесь только
+   структурные и UX-правки под конкретные размеры экрана.
+   ========================================================================== */
+
+/* ---------- ≤1200px: чуть плотнее контентные секции ---------- */
+
+@media (max-width: 1200px) {
+  .hero__content {
+    max-width: 560px;
+  }
+}
+
+/* ---------- ≤979px: мобильная навигация вместо десктопной ---------- */
+
+@media (max-width: 979px) {
+  .header__nav,
+  .header__phone {
+    display: none;
+  }
+
+  .header__mobile-actions {
+    display: flex;
+  }
+
+  .hero {
+    min-height: clamp(420px, 62vh, 620px);
+  }
+
+  .hero__content {
+    max-width: 520px;
+  }
+
+  .catalog__grid,
+  .why__grid,
+  .contact__grid,
+  .about__grid,
+  .product-section {
+    row-gap: clamp(28px, 5vw, 48px);
+  }
+}
+
+/* ---------- ≥980px: скрываем мобильный блок и оверлей меню ---------- */
+
+@media (min-width: 980px) {
+  .mobile-menu {
+    display: none !important;
+  }
+}
+
+/* ---------- ≤680px: планшет/крупный телефон ---------- */
+
+@media (max-width: 680px) {
+  .header__inner {
+    gap: 12px;
+  }
+
+  .hero__actions,
+  .product-card__footer,
+  .product__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero__actions .btn,
+  .product__actions .btn {
+    width: 100%;
+  }
+
+  .product-card__footer {
+    align-items: stretch;
+  }
+
+  .product-card__price {
+    text-align: center;
+  }
+
+  .footer__inner {
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .footer__bottom {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cta__inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cta__inner .btn {
+    width: 100%;
+  }
+
+  .breadcrumbs {
+    font-size: 13px;
+  }
+}
+
+/* ---------- ≤480px: телефон ---------- */
+
+@media (max-width: 480px) {
+  .intro {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .hero {
+    min-height: clamp(380px, 56vh, 520px);
+    align-items: flex-end;
+  }
+
+  .hero__overlay {
+    background: linear-gradient(180deg, rgba(244, 244, 241, 0.55) 0%, rgba(244, 244, 241, 0.97) 62%, rgba(244, 244, 241, 0.99) 100%);
+  }
+
+  .hero__inner {
+    padding-bottom: 32px;
+  }
+
+  .hero__content {
+    max-width: none;
+  }
+
+  .why__item {
+    padding-bottom: 20px;
+  }
+
+  .contact__panel {
+    padding: 22px 18px;
+  }
+
+  .gallery__thumbs {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ---------- ≤360px: совсем маленькие экраны ---------- */
+
+@media (max-width: 360px) {
+  .header__phone--mobile {
+    display: none;
+  }
+
+  .header__mobile-actions {
+    gap: 8px;
+  }
+
+  .mobile-menu__nav-link {
+    font-size: 24px;
+  }
+
+  .mobile-menu__phone {
+    font-size: 20px;
+  }
+
+  .gallery__thumbs {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
