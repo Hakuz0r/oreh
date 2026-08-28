@@ -1,0 +1,10 @@
+# Claude Design source files (не нужны для продакшн-сайта)
+*.dc.html
+support.js
+.thumbnail
+
+# Черновые/сырые загрузки (дубликаты assets/)
+uploads/
+
+# OS
+.DS_Store
