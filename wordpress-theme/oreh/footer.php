@@ -25,7 +25,12 @@ if (!defined('ABSPATH')) exit;
   </div>
   <div class="footer__bottom">
     <span>© <?php echo esc_html(gmdate('Y')); ?> <?php bloginfo('name'); ?>. Sport for life.</span>
-    <span><?php esc_html_e('Политика конфиденциальности', 'oreh'); ?></span>
+    <?php $oreh_privacy_url = get_privacy_policy_url(); ?>
+    <?php if ($oreh_privacy_url) : ?>
+      <a href="<?php echo esc_url($oreh_privacy_url); ?>" class="footer__bottom-link"><?php esc_html_e('Политика конфиденциальности', 'oreh'); ?></a>
+    <?php else : ?>
+      <span><?php esc_html_e('Политика конфиденциальности', 'oreh'); ?></span>
+    <?php endif; ?>
   </div>
 </footer>
 

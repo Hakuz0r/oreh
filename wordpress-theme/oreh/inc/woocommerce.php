@@ -25,7 +25,11 @@ add_action('init', function () {
 });
 
 add_action('template_redirect', function () {
-    if (function_exists('is_cart') && function_exists('is_checkout') && (is_cart() || is_checkout())) {
+    $is_unused_page = (function_exists('is_cart') && is_cart())
+        || (function_exists('is_checkout') && is_checkout())
+        || (function_exists('is_account_page') && is_account_page());
+
+    if ($is_unused_page) {
         wp_safe_redirect(home_url('/'));
         exit;
     }

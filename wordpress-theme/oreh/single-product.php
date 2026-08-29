@@ -60,13 +60,6 @@ while (have_posts()) : the_post();
 
         <div class="product__price"><?php echo wp_kses_post($product->get_price_html()); ?></div>
 
-        <?php
-        $description = $product->get_description();
-        if ($description) :
-        ?>
-          <div class="product__description"><?php echo wp_kses_post(wpautop($description)); ?></div>
-        <?php endif; ?>
-
         <div class="product__actions">
           <a href="<?php echo esc_url(home_url('/#contacts')); ?>" class="btn btn--primary"><?php esc_html_e('Оставить заявку', 'oreh'); ?></a>
           <a href="tel:<?php echo esc_attr(oreh_phone_href()); ?>" class="btn btn--outline"><?php echo esc_html(oreh_text('oreh_phone')); ?></a>
@@ -92,14 +85,25 @@ while (have_posts()) : the_post();
       </div>
     </section>
 
-    <?php if ($extra_ids) : ?>
+    <?php
+    $description = $product->get_description();
+    if ($description || $extra_ids) :
+    ?>
       <section class="about">
         <div class="about__grid">
-          <div class="about__gallery">
-            <?php foreach ($extra_ids as $id) : ?>
-              <div class="about__gallery-item"><?php echo wp_get_attachment_image($id, 'medium_large', false, ['loading' => 'lazy']); ?></div>
-            <?php endforeach; ?>
-          </div>
+          <?php if ($description) : ?>
+            <div>
+              <h2 class="about__title"><?php esc_html_e('Описание', 'oreh'); ?></h2>
+              <div class="about__text-block"><?php echo wp_kses_post(wpautop($description)); ?></div>
+            </div>
+          <?php endif; ?>
+          <?php if ($extra_ids) : ?>
+            <div class="about__gallery">
+              <?php foreach ($extra_ids as $id) : ?>
+                <div class="about__gallery-item"><?php echo wp_get_attachment_image($id, 'medium_large', false, ['loading' => 'lazy']); ?></div>
+              <?php endforeach; ?>
+            </div>
+          <?php endif; ?>
         </div>
       </section>
     <?php endif; ?>
