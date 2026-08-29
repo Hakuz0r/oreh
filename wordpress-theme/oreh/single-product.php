@@ -69,7 +69,7 @@ while (have_posts()) : the_post();
 
         <div class="product__actions">
           <a href="<?php echo esc_url(home_url('/#contacts')); ?>" class="btn btn--primary"><?php esc_html_e('Оставить заявку', 'oreh'); ?></a>
-          <a href="tel:<?php echo esc_attr(oreh_phone_href()); ?>" class="btn btn--outline"><?php echo esc_html(get_theme_mod('oreh_phone', '+7 999 123-45-67')); ?></a>
+          <a href="tel:<?php echo esc_attr(oreh_phone_href()); ?>" class="btn btn--outline"><?php echo esc_html(oreh_text('oreh_phone')); ?></a>
         </div>
 
         <?php

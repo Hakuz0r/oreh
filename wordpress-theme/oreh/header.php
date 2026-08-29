@@ -32,10 +32,10 @@ if (!defined('ABSPATH')) exit;
         'fallback_cb'    => 'oreh_default_menu',
     ]);
     ?>
-    <a href="tel:<?php echo esc_attr(oreh_phone_href()); ?>" class="header__phone"><?php echo esc_html(get_theme_mod('oreh_phone', '+7 999 123-45-67')); ?></a>
+    <a href="tel:<?php echo esc_attr(oreh_phone_href()); ?>" class="header__phone"><?php echo esc_html(oreh_text('oreh_phone')); ?></a>
 
     <div class="header__mobile-actions">
-      <a href="tel:<?php echo esc_attr(oreh_phone_href()); ?>" class="header__phone--mobile"><?php echo esc_html(get_theme_mod('oreh_phone', '+7 999 123-45-67')); ?></a>
+      <a href="tel:<?php echo esc_attr(oreh_phone_href()); ?>" class="header__phone--mobile"><?php echo esc_html(oreh_text('oreh_phone')); ?></a>
       <button type="button" class="header__burger" aria-label="<?php esc_attr_e('Меню', 'oreh'); ?>" data-menu-open>
         <span class="header__burger-line"></span>
         <span class="header__burger-line"></span>
@@ -58,5 +58,5 @@ if (!defined('ABSPATH')) exit;
       'fallback_cb'    => 'oreh_default_menu',
   ]);
   ?>
-  <a href="tel:<?php echo esc_attr(oreh_phone_href()); ?>" class="mobile-menu__phone"><?php echo esc_html(get_theme_mod('oreh_phone', '+7 999 123-45-67')); ?></a>
+  <a href="tel:<?php echo esc_attr(oreh_phone_href()); ?>" class="mobile-menu__phone"><?php echo esc_html(oreh_text('oreh_phone')); ?></a>
 </div>

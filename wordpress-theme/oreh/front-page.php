@@ -3,23 +3,25 @@ if (!defined('ABSPATH')) exit;
 
 get_header();
 
-$oreh_sent = isset($_GET['sent']) ? sanitize_text_field(wp_unslash($_GET['sent'])) : '';
+$oreh_sent      = isset($_GET['sent']) ? sanitize_text_field(wp_unslash($_GET['sent'])) : '';
+$oreh_hero_img  = get_theme_mod('oreh_hero_image', '');
+$oreh_why_img   = get_theme_mod('oreh_why_image', '');
 ?>
 
 <section id="top" class="intro">
-  <h1 class="intro__title">TriaMotion 3 In 1</h1>
-  <p class="intro__subtitle"><?php esc_html_e('Твое идеальное пространство для тренировок', 'oreh'); ?></p>
+  <h1 class="intro__title"><?php echo esc_html(oreh_text('oreh_intro_title')); ?></h1>
+  <p class="intro__subtitle"><?php echo esc_html(oreh_text('oreh_intro_subtitle')); ?></p>
 </section>
 
-<section class="hero">
+<section class="hero"<?php if ($oreh_hero_img) : ?> style="background-image: url('<?php echo esc_url($oreh_hero_img); ?>');"<?php endif; ?>>
   <div class="hero__overlay"></div>
   <div class="hero__inner">
     <div class="hero__content">
-      <h2 class="hero__title">TriaMotion</h2>
-      <p class="hero__subtitle"><?php esc_html_e('Меняй тренировку одним движением', 'oreh'); ?></p>
+      <h2 class="hero__title"><?php echo esc_html(oreh_text('oreh_hero_title')); ?></h2>
+      <p class="hero__subtitle"><?php echo esc_html(oreh_text('oreh_hero_subtitle')); ?></p>
       <div class="hero__actions">
-        <a href="#equipment" class="btn btn--primary"><?php esc_html_e('Выбрать оборудование', 'oreh'); ?></a>
-        <a href="#why" class="btn btn--outline"><?php esc_html_e('Почему мы', 'oreh'); ?></a>
+        <a href="#equipment" class="btn btn--primary"><?php echo esc_html(oreh_text('oreh_hero_btn1')); ?></a>
+        <a href="#why" class="btn btn--outline"><?php echo esc_html(oreh_text('oreh_hero_btn2')); ?></a>
       </div>
     </div>
   </div>
@@ -59,36 +61,31 @@ $oreh_sent = isset($_GET['sent']) ? sanitize_text_field(wp_unslash($_GET['sent']
 <section id="why" class="why">
   <div class="why__grid">
     <div>
-      <h2 class="why__title"><?php esc_html_e('Почему мы', 'oreh'); ?></h2>
-      <p class="why__text"><?php esc_html_e('Оборудование собирается вручную из массива ясеня и натуральной кожи. Никакого пластика, никаких лишних деталей.', 'oreh'); ?></p>
+      <h2 class="why__title"><?php echo esc_html(oreh_text('oreh_why_title')); ?></h2>
+      <p class="why__text"><?php echo esc_html(oreh_text('oreh_why_text')); ?></p>
       <div class="why__image">
-        <picture>
-          <source srcset="<?php echo esc_url(get_template_directory_uri() . '/assets/images/detail-hinge.webp'); ?>" type="image/webp" />
-          <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/detail-hinge.jpg'); ?>" alt="<?php esc_attr_e('Скамья OREH', 'oreh'); ?>" loading="lazy" />
-        </picture>
+        <?php if ($oreh_why_img) : ?>
+          <img src="<?php echo esc_url($oreh_why_img); ?>" alt="<?php echo esc_attr(oreh_text('oreh_why_title')); ?>" loading="lazy" />
+        <?php else : ?>
+          <picture>
+            <source srcset="<?php echo esc_url(get_template_directory_uri() . '/assets/images/detail-hinge.webp'); ?>" type="image/webp" />
+            <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/detail-hinge.jpg'); ?>" alt="<?php esc_attr_e('Скамья OREH', 'oreh'); ?>" loading="lazy" />
+          </picture>
+        <?php endif; ?>
       </div>
     </div>
     <div class="why__list">
-      <div class="why__item">
-        <span class="why__item-number">01</span>
-        <h3 class="why__item-title"><?php esc_html_e('Массив ясеня', 'oreh'); ?></h3>
-        <p class="why__item-text"><?php esc_html_e('Рама из цельного дерева с покрытием маслом. Каждая деталь шлифуется вручную.', 'oreh'); ?></p>
-      </div>
-      <div class="why__item">
-        <span class="why__item-number">02</span>
-        <h3 class="why__item-title"><?php esc_html_e('Натуральная кожа', 'oreh'); ?></h3>
-        <p class="why__item-text"><?php esc_html_e('Обивка из плотной кожи на упругом наполнителе — держит форму под нагрузкой.', 'oreh'); ?></p>
-      </div>
-      <div class="why__item">
-        <span class="why__item-number">03</span>
-        <h3 class="why__item-title"><?php esc_html_e('Три положения', 'oreh'); ?></h3>
-        <p class="why__item-text"><?php esc_html_e('Скамья, наклон и станок для пресса — рама меняет конфигурацию одним движением.', 'oreh'); ?></p>
-      </div>
-      <div class="why__item">
-        <span class="why__item-number">04</span>
-        <h3 class="why__item-title"><?php esc_html_e('Складывается без инструментов', 'oreh'); ?></h3>
-        <p class="why__item-text"><?php esc_html_e('Стальные фиксаторы и шарниры на подшипниках. Хранится в квартире, не занимая места.', 'oreh'); ?></p>
-      </div>
+      <?php for ($i = 1; $i <= 4; $i++) :
+          $title = oreh_text("oreh_why_{$i}_title");
+          $text  = oreh_text("oreh_why_{$i}_text");
+          if ($title === '' && $text === '') continue;
+      ?>
+        <div class="why__item">
+          <span class="why__item-number"><?php echo esc_html(sprintf('%02d', $i)); ?></span>
+          <h3 class="why__item-title"><?php echo esc_html($title); ?></h3>
+          <p class="why__item-text"><?php echo esc_html($text); ?></p>
+        </div>
+      <?php endfor; ?>
     </div>
   </div>
 </section>
@@ -96,12 +93,12 @@ $oreh_sent = isset($_GET['sent']) ? sanitize_text_field(wp_unslash($_GET['sent']
 <section id="contacts" class="contact">
   <div class="contact__grid">
     <div>
-      <h2 class="contact__title"><?php esc_html_e('Оставить заявку', 'oreh'); ?></h2>
-      <p class="contact__text"><?php esc_html_e('Расскажем про наличие, сроки изготовления и доставку. Отвечаем в течение рабочего дня.', 'oreh'); ?></p>
+      <h2 class="contact__title"><?php echo esc_html(oreh_text('oreh_contact_title')); ?></h2>
+      <p class="contact__text"><?php echo esc_html(oreh_text('oreh_contact_text')); ?></p>
       <div class="contact__details">
-        <a href="tel:<?php echo esc_attr(oreh_phone_href()); ?>" class="contact__phone"><?php echo esc_html(get_theme_mod('oreh_phone', '+7 999 123-45-67')); ?></a>
-        <a href="mailto:<?php echo esc_attr(get_theme_mod('oreh_email', 'info@oreh.ru')); ?>" class="contact__email"><?php echo esc_html(get_theme_mod('oreh_email', 'info@oreh.ru')); ?></a>
-        <span class="contact__hours"><?php echo esc_html(get_theme_mod('oreh_hours', 'Пн — Сб, 10:00 — 19:00')); ?></span>
+        <a href="tel:<?php echo esc_attr(oreh_phone_href()); ?>" class="contact__phone"><?php echo esc_html(oreh_text('oreh_phone')); ?></a>
+        <a href="mailto:<?php echo esc_attr(oreh_text('oreh_email')); ?>" class="contact__email"><?php echo esc_html(oreh_text('oreh_email')); ?></a>
+        <span class="contact__hours"><?php echo esc_html(oreh_text('oreh_hours')); ?></span>
       </div>
     </div>
 

@@ -319,6 +319,14 @@ select {
   text-wrap: pretty;
 }
 
+.intro__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  margin-top: clamp(28px, 4vw, 44px);
+}
+
 /* ---------- hero ---------- */
 
 .hero {

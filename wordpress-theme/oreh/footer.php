@@ -19,8 +19,8 @@ if (!defined('ABSPATH')) exit;
     ]);
     ?>
     <div class="footer__contacts">
-      <a href="tel:<?php echo esc_attr(oreh_phone_href()); ?>" class="footer__phone"><?php echo esc_html(get_theme_mod('oreh_phone', '+7 999 123-45-67')); ?></a>
-      <a href="mailto:<?php echo esc_attr(get_theme_mod('oreh_email', 'info@oreh.ru')); ?>" class="footer__email"><?php echo esc_html(get_theme_mod('oreh_email', 'info@oreh.ru')); ?></a>
+      <a href="tel:<?php echo esc_attr(oreh_phone_href()); ?>" class="footer__phone"><?php echo esc_html(oreh_text('oreh_phone')); ?></a>
+      <a href="mailto:<?php echo esc_attr(oreh_text('oreh_email')); ?>" class="footer__email"><?php echo esc_html(oreh_text('oreh_email')); ?></a>
     </div>
   </div>
   <div class="footer__bottom">
