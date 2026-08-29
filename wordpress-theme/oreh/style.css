@@ -335,7 +335,7 @@ select {
   background-image: url('assets/images/hero.jpg');
   background-image: image-set(url('assets/images/hero.webp') type('image/webp'), url('assets/images/hero.jpg') type('image/jpeg'));
   background-size: cover;
-  background-position: 50% 70%;
+  background-position: 50% 36%;
   display: flex;
   align-items: center;
 }
