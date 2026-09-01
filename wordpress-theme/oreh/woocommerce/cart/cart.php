@@ -6,6 +6,11 @@ if (!defined('ABSPATH')) exit;
  * прямо внутри the_content() шорткодом [woocommerce_cart] на странице
  * «Корзина». get_header()/get_footer() здесь не нужны и ломают
  * разметку (страница их уже вызвала один раз через page.php).
+ *
+ * Сюда попадаем только когда в корзине реально есть товары — если она
+ * пуста (в том числе сразу после успешной отправки заказа, когда мы
+ * сами её очистили), WooCommerce вызывает cart-empty.php вместо этого
+ * файла, минуя его целиком.
  */
 
 $oreh_sent  = isset($_GET['sent']) ? sanitize_text_field(wp_unslash($_GET['sent'])) : '';
@@ -13,25 +18,6 @@ $cart_items = WC()->cart->get_cart();
 ?>
 
 <h1 class="cart__title"><?php esc_html_e('Корзина', 'oreh'); ?></h1>
-
-<?php if ($oreh_sent === '1') : ?>
-
-  <div class="cart__checkout contact__panel">
-    <div class="form-success">
-      <h3 class="form-success__title"><?php esc_html_e('Заказ отправлен', 'oreh'); ?></h3>
-      <p class="form-success__text"><?php esc_html_e('Свяжемся с вами в течение рабочего дня.', 'oreh'); ?></p>
-      <a href="<?php echo esc_url(home_url('/#equipment')); ?>" class="form-success__btn"><?php esc_html_e('Вернуться в каталог', 'oreh'); ?></a>
-    </div>
-  </div>
-
-<?php elseif (empty($cart_items)) : ?>
-
-  <div class="cart__empty">
-    <p><?php esc_html_e('Корзина пуста.', 'oreh'); ?></p>
-    <a href="<?php echo esc_url(home_url('/#equipment')); ?>" class="btn btn--primary"><?php esc_html_e('Перейти в каталог', 'oreh'); ?></a>
-  </div>
-
-<?php else : ?>
 
   <form class="cart__items" method="post" action="<?php echo esc_url(wc_get_cart_url()); ?>">
     <?php foreach ($cart_items as $cart_item_key => $cart_item) :
@@ -102,5 +88,3 @@ $cart_items = WC()->cart->get_cart();
       <button type="submit" class="form__submit"><?php esc_html_e('Отправить заказ', 'oreh'); ?></button>
     </form>
   </div>
-
-<?php endif; ?>
