@@ -85,6 +85,7 @@ $cart_items = WC()->cart->get_cart();
         <input type="checkbox" required class="form__checkbox" />
         <span><?php esc_html_e('Согласен с обработкой персональных данных', 'oreh'); ?></span>
       </label>
+      <?php oreh_recaptcha_widget(); ?>
       <button type="submit" class="form__submit"><?php esc_html_e('Отправить заказ', 'oreh'); ?></button>
     </form>
   </div>

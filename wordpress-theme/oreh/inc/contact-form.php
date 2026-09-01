@@ -9,6 +9,11 @@ function oreh_handle_contact_form() {
         exit;
     }
 
+    if (!oreh_recaptcha_verify()) {
+        wp_safe_redirect($redirect_error);
+        exit;
+    }
+
     $name    = isset($_POST['name']) ? sanitize_text_field(wp_unslash($_POST['name'])) : '';
     $phone   = isset($_POST['phone']) ? sanitize_text_field(wp_unslash($_POST['phone'])) : '';
     $product = isset($_POST['product']) ? sanitize_text_field(wp_unslash($_POST['product'])) : '';
