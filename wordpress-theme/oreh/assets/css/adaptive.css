@@ -8,7 +8,7 @@
 /* ---------- ≤1200px: чуть плотнее контентные секции ---------- */
 
 @media (max-width: 1200px) {
-  .hero__content {
+  .hero-slider__content {
     max-width: 560px;
   }
 }
@@ -17,7 +17,7 @@
 
 @media (max-width: 979px) {
   .header__nav,
-  .header__phone {
+  .header__actions {
     display: none;
   }
 
@@ -25,11 +25,11 @@
     display: flex;
   }
 
-  .hero {
+  .hero-slider {
     min-height: clamp(420px, 62vh, 620px);
   }
 
-  .hero__content {
+  .hero-slider__content {
     max-width: 520px;
   }
 
@@ -57,16 +57,26 @@
     gap: 12px;
   }
 
-  .hero__actions,
+  .hero-slider__actions,
   .product-card__footer,
   .product__actions {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .hero__actions .btn,
+  .hero-slider__actions .btn,
   .product__actions .btn {
     width: 100%;
+  }
+
+  .hero-slider__arrow {
+    width: 36px;
+    height: 36px;
+  }
+
+  .hero-slider__arrow svg {
+    width: 16px;
+    height: 16px;
   }
 
   .product-card__footer {
@@ -99,6 +109,43 @@
   .breadcrumbs {
     font-size: 13px;
   }
+
+  .cart__item {
+    grid-template-columns: 56px 1fr auto;
+    grid-template-areas:
+      "media info remove"
+      "qty   qty  subtotal";
+    row-gap: 10px;
+  }
+
+  .cart__item-media {
+    grid-area: media;
+    width: 56px;
+    height: 56px;
+  }
+
+  .cart__item-info {
+    grid-area: info;
+  }
+
+  .cart__item-remove {
+    grid-area: remove;
+  }
+
+  .cart__item-qty {
+    grid-area: qty;
+    justify-self: start;
+  }
+
+  .cart__item-subtotal {
+    grid-area: subtotal;
+    justify-self: end;
+  }
+
+  .cart__update-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
 }
 
 /* ---------- ≤480px: телефон ---------- */
@@ -109,21 +156,32 @@
     padding-right: 16px;
   }
 
-  .hero {
+  .hero-slider {
     min-height: clamp(380px, 56vh, 520px);
+  }
+
+  .hero-slider__slide {
     align-items: flex-end;
   }
 
-  .hero__overlay {
+  .hero-slider__overlay {
     background: linear-gradient(180deg, rgba(244, 244, 241, 0.55) 0%, rgba(244, 244, 241, 0.97) 62%, rgba(244, 244, 241, 0.99) 100%);
   }
 
-  .hero__inner {
-    padding-bottom: 32px;
+  .hero-slider__inner {
+    padding-bottom: 56px;
   }
 
-  .hero__content {
+  .hero-slider__content {
     max-width: none;
+  }
+
+  .hero-slider__arrow--prev {
+    left: 8px;
+  }
+
+  .hero-slider__arrow--next {
+    right: 8px;
   }
 
   .why__item {

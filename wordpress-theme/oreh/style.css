@@ -3,7 +3,7 @@ Theme Name: OREH
 Theme URI: https://github.com/Hakuz0r/oreh
 Author: OREH
 Description: Чистая тема-каталог для OREH на базе WooCommerce (без корзины и оплаты — карточки товаров и форма заявки).
-Version: 1.0.0
+Version: 1.1.0
 Requires PHP: 7.4
 Requires at least: 6.0
 Text Domain: oreh
@@ -197,11 +197,57 @@ select {
   letter-spacing: 0.01em;
 }
 
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2vw, 28px);
+}
+
 .header__phone {
   font-size: clamp(15px, 1.5vw, 18px);
   font-weight: 700;
   letter-spacing: 0.01em;
   white-space: nowrap;
+}
+
+.header__cart {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+}
+
+.header__cart-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--color-ink);
+}
+
+.header__cart:hover .header__cart-icon {
+  color: var(--color-accent-hover);
+}
+
+.header__cart-count {
+  position: absolute;
+  top: -2px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: var(--color-white);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+}
+
+.header__cart-count.is-empty {
+  display: none;
 }
 
 .header__mobile-actions {
@@ -327,26 +373,35 @@ select {
   margin-top: clamp(28px, 4vw, 44px);
 }
 
-/* ---------- hero ---------- */
+/* ---------- hero slider ---------- */
 
-.hero {
+.hero-slider {
   position: relative;
   min-height: clamp(460px, 72vh, 820px);
-  background-image: url('assets/images/hero.jpg');
-  background-image: image-set(url('assets/images/hero.webp') type('image/webp'), url('assets/images/hero.jpg') type('image/jpeg'));
-  background-size: cover;
-  background-position: 50% 36%;
-  display: flex;
-  align-items: center;
+  overflow: hidden;
 }
 
-.hero__overlay {
+.hero-slider__slide {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  background-color: var(--color-bg-soft);
+  background-size: cover;
+  background-position: 50% 36%;
+}
+
+.hero-slider__slide.is-active {
+  display: flex;
+}
+
+.hero-slider__overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(90deg, rgba(244, 244, 241, 0.96) 0%, rgba(244, 244, 241, 0.82) 38%, rgba(244, 244, 241, 0) 72%);
 }
 
-.hero__inner {
+.hero-slider__inner {
   position: relative;
   width: 100%;
   max-width: var(--container-max);
@@ -354,32 +409,92 @@ select {
   padding: clamp(40px, 6vw, 80px) clamp(16px, 5vw, 56px);
 }
 
-.hero__content {
+.hero-slider__content {
   max-width: 640px;
 }
 
-.hero__title {
+.hero-slider__title {
   margin: 0;
-  font-size: clamp(44px, 9vw, 118px);
+  font-size: clamp(38px, 7vw, 92px);
   font-weight: 500;
-  letter-spacing: -0.03em;
-  line-height: 0.98;
+  letter-spacing: -0.02em;
+  line-height: 1;
 }
 
-.hero__subtitle {
+.hero-slider__subtitle {
   margin: clamp(14px, 2vw, 26px) 0 0;
-  font-size: clamp(17px, 2.6vw, 34px);
+  font-size: clamp(17px, 2.2vw, 30px);
   font-weight: 400;
   color: var(--color-ink-soft);
-  line-height: 1.25;
+  line-height: 1.3;
   text-wrap: pretty;
 }
 
-.hero__actions {
+.hero-slider__actions {
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
   margin-top: clamp(28px, 4vw, 52px);
+}
+
+.hero-slider__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(22, 24, 26, 0.16);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-ink);
+}
+
+.hero-slider__arrow svg {
+  width: 20px;
+  height: 20px;
+}
+
+.hero-slider__arrow:hover {
+  background: var(--color-white);
+}
+
+.hero-slider__arrow--prev {
+  left: clamp(12px, 2vw, 28px);
+}
+
+.hero-slider__arrow--next {
+  right: clamp(12px, 2vw, 28px);
+}
+
+.hero-slider__dots {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: clamp(16px, 3vw, 32px);
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.hero-slider__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 1px solid var(--color-accent);
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.hero-slider__dot.is-active {
+  background: var(--color-accent);
 }
 
 /* ---------- catalog ---------- */
@@ -472,6 +587,23 @@ select {
   font-weight: 500;
   letter-spacing: -0.01em;
   white-space: nowrap;
+}
+
+.product-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.oreh-cart-toggle.is-in-cart {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+.oreh-cart-toggle.is-in-cart:hover {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
 }
 
 /* ---------- why ---------- */
@@ -1104,6 +1236,167 @@ select {
 .cta__text {
   margin: 12px 0 0;
   font-size: clamp(15px, 1.7vw, 19px);
+  color: var(--color-muted);
+}
+
+/* ---------- обычные страницы (Политика конфиденциальности и т.п.) ---------- */
+
+.page {
+  padding: clamp(24px, 4vw, 56px) clamp(16px, 5vw, 56px) clamp(64px, 9vw, 120px);
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  margin: 1.4em 0 0.6em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.page h1:first-child,
+.page h2:first-child,
+.page h3:first-child {
+  margin-top: 0;
+}
+
+.page p {
+  margin: 0 0 1em;
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+.page ul,
+.page ol {
+  margin: 0 0 1em;
+  padding-left: 1.4em;
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+/* ---------- корзина ---------- */
+
+.cart__title {
+  margin: 0 0 clamp(24px, 3vw, 40px);
+  font-size: clamp(30px, 4.4vw, 58px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.cart__empty {
+  display: grid;
+  gap: 18px;
+  justify-items: start;
+  font-size: 17px;
+  color: var(--color-muted);
+}
+
+.cart__items {
+  display: grid;
+  gap: 14px;
+  margin-bottom: clamp(28px, 4vw, 44px);
+}
+
+.cart__item {
+  display: grid;
+  grid-template-columns: 72px 1fr auto auto auto;
+  align-items: center;
+  gap: clamp(12px, 2vw, 24px);
+  padding: 14px;
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 24px rgba(22, 24, 26, 0.07);
+}
+
+.cart__item-media {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-media-bg);
+}
+
+.cart__item-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+.cart__item-info {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.cart__item-title {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.cart__item-price {
+  font-size: 14px;
+  color: var(--color-muted);
+}
+
+.cart__item-qty {
+  width: 64px;
+  min-height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-sm);
+  background: #fbfbf9;
+  font-size: 16px;
+  text-align: center;
+}
+
+.cart__item-subtotal {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.cart__item-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--color-muted-2);
+}
+
+.cart__item-remove:hover {
+  color: var(--color-accent);
+  background: var(--color-bg-soft);
+}
+
+.cart__update-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 8px;
+}
+
+.cart__subtotal {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.cart__checkout {
+  max-width: 560px;
+}
+
+.cart__checkout-title {
+  margin: 0;
+  font-size: clamp(22px, 2.6vw, 30px);
+  font-weight: 700;
+}
+
+.cart__checkout-text {
+  margin: 8px 0 clamp(18px, 2.4vw, 26px);
   color: var(--color-muted);
 }
 

@@ -30,7 +30,10 @@ if (!$product || !$product->is_visible()) {
     <?php endif; ?>
     <div class="product-card__footer">
       <span class="product-card__price"><?php echo wp_kses_post($product->get_price_html()); ?></span>
-      <a href="<?php echo esc_url(get_permalink($product->get_id())); ?>" class="btn btn--primary btn--sm"><?php esc_html_e('Подробнее', 'oreh'); ?></a>
+      <div class="product-card__actions">
+        <?php oreh_cart_toggle_button($product, 'btn--sm'); ?>
+        <a href="<?php echo esc_url(get_permalink($product->get_id())); ?>" class="btn btn--primary btn--sm"><?php esc_html_e('Подробнее', 'oreh'); ?></a>
+      </div>
     </div>
   </div>
 </article>

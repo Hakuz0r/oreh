@@ -61,8 +61,8 @@ while (have_posts()) : the_post();
         <div class="product__price"><?php echo wp_kses_post($product->get_price_html()); ?></div>
 
         <div class="product__actions">
-          <a href="<?php echo esc_url(home_url('/#contacts')); ?>" class="btn btn--primary"><?php esc_html_e('Оставить заявку', 'oreh'); ?></a>
-          <a href="tel:<?php echo esc_attr(oreh_phone_href()); ?>" class="btn btn--outline"><?php echo esc_html(oreh_text('oreh_phone')); ?></a>
+          <?php oreh_cart_toggle_button($product, '', 'primary'); ?>
+          <a href="<?php echo esc_url(home_url('/#contacts')); ?>" class="btn btn--outline"><?php esc_html_e('Оставить заявку', 'oreh'); ?></a>
         </div>
 
         <?php

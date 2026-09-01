@@ -3,28 +3,58 @@ if (!defined('ABSPATH')) exit;
 
 get_header();
 
-$oreh_sent      = isset($_GET['sent']) ? sanitize_text_field(wp_unslash($_GET['sent'])) : '';
-$oreh_hero_img  = get_theme_mod('oreh_hero_image', '');
-$oreh_why_img   = get_theme_mod('oreh_why_image', '');
+$oreh_sent   = isset($_GET['sent']) ? sanitize_text_field(wp_unslash($_GET['sent'])) : '';
+$oreh_why_img = get_theme_mod('oreh_why_image', '');
+$oreh_slides  = oreh_get_slides();
 ?>
 
-<section id="top" class="intro">
-  <h1 class="intro__title"><?php echo esc_html(oreh_text('oreh_intro_title')); ?></h1>
-  <p class="intro__subtitle"><?php echo esc_html(oreh_text('oreh_intro_subtitle')); ?></p>
-</section>
+<section id="top" class="hero-slider" data-hero-slider>
+  <?php if ($oreh_slides) : ?>
+    <?php foreach ($oreh_slides as $i => $slide) : ?>
+      <div
+        class="hero-slider__slide<?php echo $i === 0 ? ' is-active' : ''; ?>"
+        data-slide
+        <?php if ($slide['image']) : ?>style="background-image: url('<?php echo esc_url($slide['image']); ?>');"<?php endif; ?>
+      >
+        <div class="hero-slider__overlay"></div>
+        <div class="hero-slider__inner">
+          <div class="hero-slider__content">
+            <h1 class="hero-slider__title"><?php echo esc_html($slide['title']); ?></h1>
+            <?php if ($slide['subtitle']) : ?>
+              <p class="hero-slider__subtitle"><?php echo esc_html($slide['subtitle']); ?></p>
+            <?php endif; ?>
+            <div class="hero-slider__actions">
+              <a href="<?php echo esc_url($slide['btn_url']); ?>" class="btn btn--primary"><?php echo esc_html($slide['btn_text']); ?></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    <?php endforeach; ?>
 
-<section class="hero"<?php if ($oreh_hero_img) : ?> style="background-image: url('<?php echo esc_url($oreh_hero_img); ?>');"<?php endif; ?>>
-  <div class="hero__overlay"></div>
-  <div class="hero__inner">
-    <div class="hero__content">
-      <h2 class="hero__title"><?php echo esc_html(oreh_text('oreh_hero_title')); ?></h2>
-      <p class="hero__subtitle"><?php echo esc_html(oreh_text('oreh_hero_subtitle')); ?></p>
-      <div class="hero__actions">
-        <a href="#equipment" class="btn btn--primary"><?php echo esc_html(oreh_text('oreh_hero_btn1')); ?></a>
-        <a href="#why" class="btn btn--outline"><?php echo esc_html(oreh_text('oreh_hero_btn2')); ?></a>
+    <?php if (count($oreh_slides) > 1) : ?>
+      <button type="button" class="hero-slider__arrow hero-slider__arrow--prev" aria-label="<?php esc_attr_e('Предыдущий слайд', 'oreh'); ?>" data-slide-prev>
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button type="button" class="hero-slider__arrow hero-slider__arrow--next" aria-label="<?php esc_attr_e('Следующий слайд', 'oreh'); ?>" data-slide-next>
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="hero-slider__dots">
+        <?php foreach ($oreh_slides as $i => $slide) : ?>
+          <button type="button" class="hero-slider__dot<?php echo $i === 0 ? ' is-active' : ''; ?>" aria-label="<?php echo esc_attr(sprintf(/* translators: %d: номер слайда */ __('Слайд %d', 'oreh'), $i + 1)); ?>" data-slide-dot></button>
+        <?php endforeach; ?>
+      </div>
+    <?php endif; ?>
+  <?php else : ?>
+    <div class="hero-slider__slide is-active">
+      <div class="hero-slider__overlay"></div>
+      <div class="hero-slider__inner">
+        <div class="hero-slider__content">
+          <h1 class="hero-slider__title"><?php bloginfo('name'); ?></h1>
+          <p class="hero-slider__subtitle"><?php esc_html_e('Добавьте слайды в разделе «Слайды баннера»', 'oreh'); ?></p>
+        </div>
       </div>
     </div>
-  </div>
+  <?php endif; ?>
 </section>
 
 <section id="equipment" class="catalog">

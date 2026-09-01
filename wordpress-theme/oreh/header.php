@@ -1,4 +1,7 @@
 <?php
+/**
+ * Header
+ */
 if (!defined('ABSPATH')) exit;
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -32,9 +35,14 @@ if (!defined('ABSPATH')) exit;
         'fallback_cb'    => 'oreh_default_menu',
     ]);
     ?>
-    <a href="tel:<?php echo esc_attr(oreh_phone_href()); ?>" class="header__phone"><?php echo esc_html(oreh_text('oreh_phone')); ?></a>
+
+    <div class="header__actions">
+      <a href="tel:<?php echo esc_attr(oreh_phone_href()); ?>" class="header__phone"><?php echo esc_html(oreh_text('oreh_phone')); ?></a>
+      <?php oreh_cart_icon(); ?>
+    </div>
 
     <div class="header__mobile-actions">
+      <?php oreh_cart_icon(); ?>
       <a href="tel:<?php echo esc_attr(oreh_phone_href()); ?>" class="header__phone--mobile"><?php echo esc_html(oreh_text('oreh_phone')); ?></a>
       <button type="button" class="header__burger" aria-label="<?php esc_attr_e('Меню', 'oreh'); ?>" data-menu-open>
         <span class="header__burger-line"></span>
