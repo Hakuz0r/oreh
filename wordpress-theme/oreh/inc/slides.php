@@ -98,13 +98,17 @@ function oreh_get_slides() {
     ]);
 
     return array_map(function ($slide) {
+        $btn_text = get_post_meta($slide->ID, '_oreh_slide_btn_text', true);
+        $btn_url  = get_post_meta($slide->ID, '_oreh_slide_btn_url', true);
+
         return [
-            'id'       => $slide->ID,
-            'title'    => get_the_title($slide),
-            'subtitle' => get_post_meta($slide->ID, '_oreh_slide_subtitle', true),
-            'btn_text' => get_post_meta($slide->ID, '_oreh_slide_btn_text', true) ?: __('Выбрать оборудование', 'oreh'),
-            'btn_url'  => get_post_meta($slide->ID, '_oreh_slide_btn_url', true) ?: '#equipment',
-            'image'    => get_the_post_thumbnail_url($slide->ID, 'full'),
+            'id'         => $slide->ID,
+            'title'      => get_the_title($slide),
+            'subtitle'   => get_post_meta($slide->ID, '_oreh_slide_subtitle', true),
+            'has_button' => $btn_text !== '' || $btn_url !== '',
+            'btn_text'   => $btn_text !== '' ? $btn_text : __('Выбрать оборудование', 'oreh'),
+            'btn_url'    => $btn_url !== '' ? $btn_url : '#equipment',
+            'image'      => get_the_post_thumbnail_url($slide->ID, 'full'),
         ];
     }, $slides);
 }

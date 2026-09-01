@@ -23,9 +23,11 @@ $oreh_slides  = oreh_get_slides();
             <?php if ($slide['subtitle']) : ?>
               <p class="hero-slider__subtitle"><?php echo esc_html($slide['subtitle']); ?></p>
             <?php endif; ?>
-            <div class="hero-slider__actions">
-              <a href="<?php echo esc_url($slide['btn_url']); ?>" class="btn btn--primary"><?php echo esc_html($slide['btn_text']); ?></a>
-            </div>
+            <?php if ($slide['has_button']) : ?>
+              <div class="hero-slider__actions">
+                <a href="<?php echo esc_url($slide['btn_url']); ?>" class="btn btn--primary"><?php echo esc_html($slide['btn_text']); ?></a>
+              </div>
+            <?php endif; ?>
           </div>
         </div>
       </div>
