@@ -84,6 +84,21 @@ select {
   padding-right: clamp(16px, 5vw, 56px);
 }
 
+/* Скрыто визуально, но доступно скринридерам и поисковым роботам —
+   для заголовков разделов, которые не нужны в макете, но нужны
+   для правильной структуры документа. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ---------- wp menu resets (ul/li из wp_nav_menu) ---------- */
 
 .header__nav,

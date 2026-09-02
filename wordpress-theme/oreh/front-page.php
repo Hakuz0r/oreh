@@ -19,7 +19,11 @@ $oreh_slides  = oreh_get_slides();
         <div class="hero-slider__overlay"></div>
         <div class="hero-slider__inner">
           <div class="hero-slider__content">
-            <h1 class="hero-slider__title"><?php echo esc_html($slide['title']); ?></h1>
+            <?php if ($i === 0) : ?>
+              <h1 class="hero-slider__title"><?php echo esc_html($slide['title']); ?></h1>
+            <?php else : ?>
+              <h2 class="hero-slider__title"><?php echo esc_html($slide['title']); ?></h2>
+            <?php endif; ?>
             <?php if ($slide['subtitle']) : ?>
               <p class="hero-slider__subtitle"><?php echo esc_html($slide['subtitle']); ?></p>
             <?php endif; ?>
@@ -61,6 +65,7 @@ $oreh_slides  = oreh_get_slides();
 
 <section id="equipment" class="catalog">
   <div class="container">
+    <h2 class="visually-hidden"><?php esc_html_e('Оборудование', 'oreh'); ?></h2>
     <div class="catalog__grid">
       <?php if (class_exists('WooCommerce')) :
         $oreh_products = new WP_Query([

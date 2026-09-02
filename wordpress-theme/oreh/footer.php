@@ -1,6 +1,8 @@
 <?php
 if (!defined('ABSPATH')) exit;
 ?>
+</main>
+
 <footer class="footer">
   <div class="footer__inner">
     <div class="footer__brand">

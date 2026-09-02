@@ -68,3 +68,5 @@ if (!defined('ABSPATH')) exit;
   ?>
   <a href="tel:<?php echo esc_attr(oreh_phone_href()); ?>" class="mobile-menu__phone"><?php echo esc_html(oreh_text('oreh_phone')); ?></a>
 </div>
+
+<main>
