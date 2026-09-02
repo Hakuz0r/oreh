@@ -9,9 +9,10 @@ if (!defined('ABSPATH')) exit;
 function oreh_customizer_defaults() {
     return [
         // Контакты
-        'oreh_phone'  => '+7 999 123-45-67',
-        'oreh_email'  => 'info@oreh.ru',
-        'oreh_hours'  => 'Пн — Сб, 10:00 — 19:00',
+        'oreh_phone'       => '+7 999 123-45-67',
+        'oreh_email'       => 'info@oreh.ru',
+        'oreh_hours'       => 'Пн — Сб, 10:00 — 19:00',
+        'oreh_leads_email' => '',
 
         // Верхний блок
         'oreh_intro_title'    => 'TriaMotion 3 In 1',
@@ -76,8 +77,19 @@ add_action('customize_register', function ($wp_customize) {
         'priority' => 30,
     ]);
     $add($wp_customize, 'oreh_phone', __('Телефон', 'oreh'), 'oreh_contacts');
-    $add($wp_customize, 'oreh_email', __('Email', 'oreh'), 'oreh_contacts');
+    $add($wp_customize, 'oreh_email', __('Email (показывается на сайте)', 'oreh'), 'oreh_contacts');
     $add($wp_customize, 'oreh_hours', __('Часы работы', 'oreh'), 'oreh_contacts');
+    $wp_customize->add_setting('oreh_leads_email', [
+        'default'           => '',
+        'sanitize_callback' => 'sanitize_email',
+        'transport'         => 'refresh',
+    ]);
+    $wp_customize->add_control('oreh_leads_email', [
+        'label'       => __('Email для заявок (получатель)', 'oreh'),
+        'description' => __('Куда дублировать заявки с сайта письмом (кроме Telegram). Если не заполнено — уйдёт на Email администратора сайта.', 'oreh'),
+        'section'     => 'oreh_contacts',
+        'type'        => 'email',
+    ]);
 
     // --- Главный экран ---
     $wp_customize->add_section('oreh_hero', [
@@ -138,4 +150,13 @@ add_action('customize_register', function ($wp_customize) {
  */
 function oreh_phone_href() {
     return preg_replace('/[^0-9+]/', '', oreh_text('oreh_phone'));
+}
+
+/**
+ * Куда дублировать заявки письмом. Пусто в кастомайзере — берём
+ * Email администратора сайта (Настройки → Общие).
+ */
+function oreh_leads_email() {
+    $email = get_theme_mod('oreh_leads_email', '');
+    return $email !== '' ? $email : get_option('admin_email');
 }

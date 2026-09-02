@@ -34,6 +34,15 @@ function oreh_handle_contact_form() {
 
     oreh_send_to_telegram($text);
 
+    $email_body = sprintf(
+        "Новая заявка с сайта OREH\n\nИмя: %s\nТелефон: %s\nИнтересует: %s\nКомментарий: %s",
+        $name,
+        $phone,
+        $product !== '' ? $product : '—',
+        $comment !== '' ? $comment : '—'
+    );
+    wp_mail(oreh_leads_email(), 'Новая заявка с сайта OREH', $email_body);
+
     wp_safe_redirect(add_query_arg('sent', '1', home_url('/#contacts')));
     exit;
 }

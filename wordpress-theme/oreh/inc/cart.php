@@ -57,6 +57,15 @@ function oreh_handle_cart_submit() {
 
     oreh_send_to_telegram($text);
 
+    $email_body = sprintf(
+        "Заказ из корзины OREH\n\nИмя: %s\nТелефон: %s\nТовары:\n%s\n\nКомментарий: %s",
+        $name,
+        $phone,
+        implode("\n", $items),
+        $comment !== '' ? $comment : '—'
+    );
+    wp_mail(oreh_leads_email(), 'Заказ из корзины OREH', $email_body);
+
     WC()->cart->empty_cart();
 
     wp_safe_redirect(add_query_arg('sent', '1', wc_get_cart_url()));
