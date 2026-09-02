@@ -16,7 +16,9 @@ $oreh_slides  = oreh_get_slides();
         data-slide
         <?php if ($slide['image']) : ?>style="background-image: url('<?php echo esc_url($slide['image']); ?>');"<?php endif; ?>
       >
-        <div class="hero-slider__overlay"></div>
+        <?php if ($slide['overlay'] !== 'off') : ?>
+          <div class="hero-slider__overlay<?php echo $slide['overlay'] !== 'normal' ? ' hero-slider__overlay--' . esc_attr($slide['overlay']) : ''; ?>"></div>
+        <?php endif; ?>
         <div class="hero-slider__inner">
           <div class="hero-slider__content">
             <?php if ($i === 0) : ?>

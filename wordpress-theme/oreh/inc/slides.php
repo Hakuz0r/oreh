@@ -40,12 +40,25 @@ add_action('add_meta_boxes', function () {
     );
 });
 
+function oreh_slide_overlay_options() {
+    return [
+        'off'    => __('Выключено', 'oreh'),
+        'light'  => __('Слабое', 'oreh'),
+        'normal' => __('Обычное (по умолчанию)', 'oreh'),
+        'strong' => __('Сильное', 'oreh'),
+    ];
+}
+
 function oreh_render_slide_meta_box($post) {
     wp_nonce_field('oreh_slide_save', 'oreh_slide_nonce');
 
     $subtitle = get_post_meta($post->ID, '_oreh_slide_subtitle', true);
     $btn_text = get_post_meta($post->ID, '_oreh_slide_btn_text', true);
     $btn_url  = get_post_meta($post->ID, '_oreh_slide_btn_url', true);
+    $overlay  = get_post_meta($post->ID, '_oreh_slide_overlay', true);
+    if ($overlay === '') {
+        $overlay = 'normal';
+    }
     ?>
     <p>
         <label for="oreh_slide_subtitle"><strong><?php esc_html_e('Подзаголовок', 'oreh'); ?></strong></label><br />
@@ -58,6 +71,15 @@ function oreh_render_slide_meta_box($post) {
     <p>
         <label for="oreh_slide_btn_url"><strong><?php esc_html_e('Ссылка кнопки', 'oreh'); ?></strong></label><br />
         <input type="text" id="oreh_slide_btn_url" name="oreh_slide_btn_url" value="<?php echo esc_attr($btn_url); ?>" class="widefat" placeholder="#equipment" />
+    </p>
+    <p>
+        <label for="oreh_slide_overlay"><strong><?php esc_html_e('Затемнение фона', 'oreh'); ?></strong></label><br />
+        <select id="oreh_slide_overlay" name="oreh_slide_overlay">
+            <?php foreach (oreh_slide_overlay_options() as $value => $label) : ?>
+                <option value="<?php echo esc_attr($value); ?>" <?php selected($overlay, $value); ?>><?php echo esc_html($label); ?></option>
+            <?php endforeach; ?>
+        </select>
+        <p class="description"><?php esc_html_e('Затемняет фото под текстом, чтобы заголовок и кнопка оставались читаемыми. Если фото и так тёмное или спокойное — можно ослабить или выключить.', 'oreh'); ?></p>
     </p>
     <p class="description"><?php esc_html_e('Не забудьте задать «Фон слайда» справа (изображение записи) — это фото на слайде. Порядок слайдов задаётся перетаскиванием в списке «Слайды баннера».', 'oreh'); ?></p>
     <?php
@@ -83,6 +105,9 @@ add_action('save_post_oreh_slide', function ($post_id) {
     if (isset($_POST['oreh_slide_btn_url'])) {
         update_post_meta($post_id, '_oreh_slide_btn_url', sanitize_text_field(wp_unslash($_POST['oreh_slide_btn_url'])));
     }
+    if (isset($_POST['oreh_slide_overlay']) && array_key_exists($_POST['oreh_slide_overlay'], oreh_slide_overlay_options())) {
+        update_post_meta($post_id, '_oreh_slide_overlay', sanitize_key($_POST['oreh_slide_overlay']));
+    }
 });
 
 /**
@@ -100,6 +125,10 @@ function oreh_get_slides() {
     return array_map(function ($slide) {
         $btn_text = get_post_meta($slide->ID, '_oreh_slide_btn_text', true);
         $btn_url  = get_post_meta($slide->ID, '_oreh_slide_btn_url', true);
+        $overlay  = get_post_meta($slide->ID, '_oreh_slide_overlay', true);
+        if (!array_key_exists($overlay, oreh_slide_overlay_options())) {
+            $overlay = 'normal';
+        }
 
         return [
             'id'         => $slide->ID,
@@ -108,6 +137,7 @@ function oreh_get_slides() {
             'has_button' => $btn_text !== '' || $btn_url !== '',
             'btn_text'   => $btn_text !== '' ? $btn_text : __('Выбрать оборудование', 'oreh'),
             'btn_url'    => $btn_url !== '' ? $btn_url : '#equipment',
+            'overlay'    => $overlay,
             'image'      => get_the_post_thumbnail_url($slide->ID, 'full'),
         ];
     }, $slides);
