@@ -19,6 +19,11 @@ function oreh_handle_cart_submit() {
         exit;
     }
 
+    if (!oreh_antispam_check()) {
+        wp_safe_redirect($redirect_error);
+        exit;
+    }
+
     // admin-post.php живёт под /wp-admin/, поэтому WooCommerce по
     // умолчанию не инициализирует WC()->cart на этом запросе — просим
     // явно, иначе будет обращение к методу null-объекта.

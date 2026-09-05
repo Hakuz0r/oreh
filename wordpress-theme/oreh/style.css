@@ -99,6 +99,17 @@ select {
   border: 0;
 }
 
+/* Honeypot-поле формы — скрыто от людей (в т.ч. от скринридеров,
+   в отличие от .visually-hidden выше), но обычный HTML-парсер бота
+   видит его как самое обычное поле. */
+.oreh-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 /* ---------- wp menu resets (ul/li из wp_nav_menu) ---------- */
 
 .header__nav,

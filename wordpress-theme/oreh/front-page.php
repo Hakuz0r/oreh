@@ -191,6 +191,7 @@ $oreh_slides  = oreh_get_slides();
           <span><?php esc_html_e('Согласен с обработкой персональных данных', 'oreh'); ?></span>
         </label>
         <?php oreh_recaptcha_widget(); ?>
+        <?php oreh_antispam_widget(); ?>
         <button type="submit" class="form__submit"><?php esc_html_e('Отправить заявку', 'oreh'); ?></button>
       </form>
     </div>

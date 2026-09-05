@@ -12,4 +12,5 @@ require_once get_template_directory() . '/inc/performance.php';
 require_once get_template_directory() . '/inc/seo.php';
 require_once get_template_directory() . '/inc/telegram.php';
 require_once get_template_directory() . '/inc/recaptcha.php';
+require_once get_template_directory() . '/inc/antispam.php';
 require_once get_template_directory() . '/inc/contact-form.php';

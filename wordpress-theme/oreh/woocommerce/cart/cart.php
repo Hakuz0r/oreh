@@ -86,6 +86,7 @@ $cart_items = WC()->cart->get_cart();
         <span><?php esc_html_e('Согласен с обработкой персональных данных', 'oreh'); ?></span>
       </label>
       <?php oreh_recaptcha_widget(); ?>
+      <?php oreh_antispam_widget(); ?>
       <button type="submit" class="form__submit"><?php esc_html_e('Отправить заказ', 'oreh'); ?></button>
     </form>
   </div>
