@@ -183,34 +183,46 @@ function oreh_get_slides() {
             $fit = 'auto';
         }
 
-        // Вертикальное фото, растянутое на всю ширину десктопного баннера,
-        // превращается в бессмысленный кроп, поэтому в «Авто» показываем его целиком.
-        // Слайд с выключенным затемнением — исключение: там нет текста, который
-        // нужно уводить с фотографии, и фото занимает баннер целиком.
-        $thumb_meta = wp_get_attachment_metadata(get_post_thumbnail_id($slide->ID));
-        $is_tall    = !empty($thumb_meta['width']) && !empty($thumb_meta['height'])
-            && $thumb_meta['height'] >= $thumb_meta['width'];
-
-        $fit_desktop = $fit === 'auto' ? (($is_tall && $overlay !== 'off') ? 'contain' : 'cover') : $fit;
-        $fit_mobile  = $fit === 'auto' ? 'cover' : $fit;
-
         $subtitle = get_post_meta($slide->ID, '_oreh_slide_subtitle', true);
         $has_text = get_the_title($slide) !== '' || $subtitle !== '';
+
+        // «Авто»: слайд с текстом и затемнением — плашка слева, фото фиксированной
+        // ширины справа (не зависит от пропорций фото — так градиент затемнения
+        // можно погасить ровно на границе колонки, без нахлёста на фото). Слайд без
+        // текста или с выключенным затемнением — фото на весь баннер, как раньше.
+        $is_panel = $fit === 'auto' && $has_text && $overlay !== 'off';
+        if ($fit === 'auto') {
+            $fit_desktop = $is_panel ? 'panel' : 'cover';
+        } else {
+            $fit_desktop = $fit;
+        }
+        $fit_mobile = $fit === 'auto' ? 'cover' : $fit;
+        $fit_css    = $fit_desktop === 'panel' ? 'cover' : $fit_desktop;
 
         $pos_x_raw = get_post_meta($slide->ID, '_oreh_slide_pos_x', true);
         $pos_y_raw = get_post_meta($slide->ID, '_oreh_slide_pos_y', true);
         $pos_x = $pos_x_raw === '' ? 50 : max(0, min(100, (int) $pos_x_raw));
         $pos_y = $pos_y_raw === '' ? 36 : max(0, min(100, (int) $pos_y_raw));
-        // Фото целиком на десктопе прижимаем вправо, чтобы оно не лезло под текст;
-        // на слайде без текста освобождать левый край не от чего — оставляем по центру.
-        $pos_x_desktop = ($pos_x_raw === '' && $fit_desktop === 'contain' && $has_text) ? 100 : $pos_x;
+        // Колонку с фото (панель и «показать целиком») по умолчанию прижимаем
+        // вправо, чтобы она не лезла под текст; на слайде без текста — по центру.
+        $is_column     = in_array($fit_desktop, ['panel', 'contain'], true);
+        $pos_x_desktop = ($pos_x_raw === '' && $is_column && $has_text) ? 100 : $pos_x;
 
-        // Фото целиком не доходит до краёв блока, поэтому растушёвываем те его края,
+        // «Показать целиком» — истинный контейн, ширина колонки идёт от пропорций
+        // фото. «Панель» — фиксированная ширина, чтобы фото не зависело от кадра
+        // и градиент затемнения мог гаснуть ровно на её границе (см. style.css).
+        $photo_width = $fit_desktop === 'panel' ? '55%' : 'auto';
+
+        // Мобильная растушёвка верхнего края фото под плашкой — длина зависит
+        // от той же настройки, что и десктопное затемнение (см. adaptive.css).
+        $fade_mobile = ['off' => '0%', 'light' => '12%', 'normal' => '22%', 'strong' => '34%'][$overlay] ?? '22%';
+
+        // Колонка не доходит до краёв блока, поэтому растушёвываем те её края,
         // которые граничат с фоном, — иначе на стыке получается резкая линия.
         // Растушёвка — часть затемнения: выключено затемнение, выключены и края.
         $fade_start = '0%';
         $fade_end   = '100%';
-        if ($fit_desktop === 'contain' && $overlay !== 'off') {
+        if ($is_column && $overlay !== 'off') {
             if ($pos_x_desktop >= 90) {
                 $fade_start = '20%';
             } elseif ($pos_x_desktop <= 10) {
@@ -230,11 +242,14 @@ function oreh_get_slides() {
             'btn_url'     => $btn_url !== '' ? $btn_url : '#equipment',
             'overlay'     => $overlay,
             'image'       => get_the_post_thumbnail_url($slide->ID, 'full'),
-            'fit_desktop' => $fit_desktop,
+            'fit_desktop' => $fit_css,
             'fit_mobile'  => $fit_mobile,
             'pos_desktop' => $pos_x_desktop . '% ' . $pos_y . '%',
             'pos_mobile'  => $pos_x . '% ' . $pos_y . '%',
-            'is_whole'    => $fit_desktop === 'contain',
+            'is_column'   => $is_column,
+            'is_panel'    => $fit_desktop === 'panel',
+            'photo_width' => $photo_width,
+            'fade_mobile' => $fade_mobile,
             'x_desktop'   => $pos_x_desktop . '%',
             'fade_start'  => $fade_start,
             'fade_end'    => $fade_end,

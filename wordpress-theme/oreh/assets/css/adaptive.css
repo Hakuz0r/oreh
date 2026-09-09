@@ -95,15 +95,20 @@
 
   /* Под плашкой фото живёт только в полосе ниже неё, иначе плашка срезает его
      верх (головы) и «положение по вертикали» считается от невидимой области.
-     Слайды без плашки занимают всю высоту — резать там нечего. */
+     Слайды без плашки занимают всю высоту — резать там нечего.
+     Верхний край фото растушёван маской в прозрачность — это надёжнее, чем
+     подгонять высоту отдельной градиентной полосы под высоту текста: маска
+     всегда стыкуется с плашкой без зазора и без резкой линии, независимо от
+     того, сколько строк в заголовке. Цвет плашки и фона слайда совпадают
+     (--color-bg-soft), поэтому фото растворяется именно в него. */
   .hero-slider__slide--panel .hero-slider__image {
     top: auto;
     height: 68%;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 var(--hero-fade-mobile, 22%));
+    mask-image: linear-gradient(180deg, transparent 0%, #000 var(--hero-fade-mobile, 22%));
   }
 
-  /* Вместо плёнки поверх всего фото — сплошная плашка под текстом, а фото
-     ниже остаётся чистым. Плашка висит на __inner, чтобы её высота шла от
-     самого текста; «Затемнение фона» задаёт длину растушёвки под ней. */
+  /* Плёнка поверх всего фото не нужна — плашка под текстом уже сплошная. */
   .hero-slider__overlay {
     display: none;
   }
@@ -111,24 +116,6 @@
   .hero-slider__overlay ~ .hero-slider__inner {
     background: var(--color-bg-soft);
     padding-bottom: clamp(28px, 6vw, 44px);
-  }
-
-  .hero-slider__overlay ~ .hero-slider__inner::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    height: 88px;
-    background: linear-gradient(180deg, rgba(244, 244, 241, 1) 0%, rgba(244, 244, 241, 0) 100%);
-  }
-
-  .hero-slider__overlay--light ~ .hero-slider__inner::after {
-    height: 52px;
-  }
-
-  .hero-slider__overlay--strong ~ .hero-slider__inner::after {
-    height: 148px;
   }
 
   .hero-slider__content {

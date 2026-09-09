@@ -428,13 +428,15 @@ select {
   object-position: var(--hero-pos, 50% 36%);
 }
 
-/* Фото целиком занимает не всю ширину блока, поэтому размер элемента приводим
-   к размеру самой фотографии — только так растушёвка ляжет на её реальный край,
-   а не на пустоту. Отсюда же позиционирование через left/transform. */
+/* Колонка с фото не занимает всю ширину блока, поэтому размер элемента приводим
+   к размеру самой колонки — только так растушёвка ляжет на её реальный край,
+   а не на пустоту. Отсюда же позиционирование через left/transform.
+   «Показать целиком» — ширина авто (по пропорциям фото), «Панель» — фиксированная
+   var(--hero-photo-width), чтобы фото не зависело от кадра и не «плавало». */
 .hero-slider__slide--whole .hero-slider__image {
   left: var(--hero-x, 100%);
   right: auto;
-  width: auto;
+  width: var(--hero-photo-width, auto);
   max-width: 100%;
   transform: translateX(calc(var(--hero-x, 100%) * -1));
   -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 var(--hero-fade-start, 0%), #000 var(--hero-fade-end, 100%), transparent 100%);
@@ -453,6 +455,21 @@ select {
 
 .hero-slider__overlay--strong {
   background: linear-gradient(90deg, rgba(244, 244, 241, 1) 0%, rgba(244, 244, 241, 0.92) 45%, rgba(244, 244, 241, 0.25) 80%);
+}
+
+/* Слайд «Панель»: колонка с фото фиксированной ширины (55%), поэтому затемнение
+   гасим ровно на её границе (100% - 55% = 45%) — иначе засвет заходит и на фото
+   поверх его собственной растушёвки, и оно выглядит мельче и мутнее, чем есть. */
+.hero-slider__slide--panel-photo .hero-slider__overlay {
+  background: linear-gradient(90deg, rgba(244, 244, 241, 0.96) 0%, rgba(244, 244, 241, 0.82) 20%, rgba(244, 244, 241, 0) 42%);
+}
+
+.hero-slider__slide--panel-photo .hero-slider__overlay--light {
+  background: linear-gradient(90deg, rgba(244, 244, 241, 0.7) 0%, rgba(244, 244, 241, 0.5) 20%, rgba(244, 244, 241, 0) 42%);
+}
+
+.hero-slider__slide--panel-photo .hero-slider__overlay--strong {
+  background: linear-gradient(90deg, rgba(244, 244, 241, 1) 0%, rgba(244, 244, 241, 0.94) 24%, rgba(244, 244, 241, 0.1) 42%);
 }
 
 .hero-slider__inner {

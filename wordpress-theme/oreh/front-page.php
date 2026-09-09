@@ -12,9 +12,9 @@ $oreh_slides  = oreh_get_slides();
   <?php if ($oreh_slides) : ?>
     <?php foreach ($oreh_slides as $i => $slide) : ?>
       <div
-        class="hero-slider__slide<?php echo $i === 0 ? ' is-active' : ''; ?><?php echo $slide['overlay'] !== 'off' ? ' hero-slider__slide--panel' : ''; ?><?php echo $slide['is_whole'] ? ' hero-slider__slide--whole' : ''; ?>"
+        class="hero-slider__slide<?php echo $i === 0 ? ' is-active' : ''; ?><?php echo $slide['overlay'] !== 'off' ? ' hero-slider__slide--panel' : ''; ?><?php echo $slide['is_column'] ? ' hero-slider__slide--whole' : ''; ?><?php echo $slide['is_panel'] ? ' hero-slider__slide--panel-photo' : ''; ?>"
         data-slide
-        style="--hero-fit: <?php echo esc_attr($slide['fit_desktop']); ?>; --hero-fit-mobile: <?php echo esc_attr($slide['fit_mobile']); ?>; --hero-pos: <?php echo esc_attr($slide['pos_desktop']); ?>; --hero-pos-mobile: <?php echo esc_attr($slide['pos_mobile']); ?>; --hero-x: <?php echo esc_attr($slide['x_desktop']); ?>; --hero-fade-start: <?php echo esc_attr($slide['fade_start']); ?>; --hero-fade-end: <?php echo esc_attr($slide['fade_end']); ?>;"
+        style="--hero-fit: <?php echo esc_attr($slide['fit_desktop']); ?>; --hero-fit-mobile: <?php echo esc_attr($slide['fit_mobile']); ?>; --hero-pos: <?php echo esc_attr($slide['pos_desktop']); ?>; --hero-pos-mobile: <?php echo esc_attr($slide['pos_mobile']); ?>; --hero-x: <?php echo esc_attr($slide['x_desktop']); ?>; --hero-photo-width: <?php echo esc_attr($slide['photo_width']); ?>; --hero-fade-start: <?php echo esc_attr($slide['fade_start']); ?>; --hero-fade-end: <?php echo esc_attr($slide['fade_end']); ?>; --hero-fade-mobile: <?php echo esc_attr($slide['fade_mobile']); ?>;"
       >
         <?php if ($slide['image']) : ?>
           <img
