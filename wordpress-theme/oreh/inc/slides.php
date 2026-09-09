@@ -102,7 +102,7 @@ function oreh_render_slide_meta_box($post) {
                 <option value="<?php echo esc_attr($value); ?>" <?php selected($fit, $value); ?>><?php echo esc_html($label); ?></option>
             <?php endforeach; ?>
         </select>
-        <p class="description"><?php esc_html_e('«Авто» — вертикальные фото на широком экране показываются целиком и прижимаются вправо, горизонтальные растягиваются на весь баннер. Если фото на десктопе выглядит слишком приближенным — поставьте «Показать фото целиком».', 'oreh'); ?></p>
+        <p class="description"><?php esc_html_e('«Авто» — вертикальные фото на широком экране показываются целиком и прижимаются вправо, горизонтальные растягиваются на весь баннер. Если затемнение выключено, фото всегда занимает баннер целиком — тогда кадр подбирается полем «Положение фото по вертикали». Если фото на десктопе выглядит слишком приближенным — поставьте «Показать фото целиком».', 'oreh'); ?></p>
     </p>
     <p>
         <label for="oreh_slide_pos_x"><strong><?php esc_html_e('Положение фото по горизонтали, %', 'oreh'); ?></strong></label><br />
@@ -185,11 +185,13 @@ function oreh_get_slides() {
 
         // Вертикальное фото, растянутое на всю ширину десктопного баннера,
         // превращается в бессмысленный кроп, поэтому в «Авто» показываем его целиком.
+        // Слайд с выключенным затемнением — исключение: там нет текста, который
+        // нужно уводить с фотографии, и фото занимает баннер целиком.
         $thumb_meta = wp_get_attachment_metadata(get_post_thumbnail_id($slide->ID));
         $is_tall    = !empty($thumb_meta['width']) && !empty($thumb_meta['height'])
             && $thumb_meta['height'] >= $thumb_meta['width'];
 
-        $fit_desktop = $fit === 'auto' ? ($is_tall ? 'contain' : 'cover') : $fit;
+        $fit_desktop = $fit === 'auto' ? (($is_tall && $overlay !== 'off') ? 'contain' : 'cover') : $fit;
         $fit_mobile  = $fit === 'auto' ? 'cover' : $fit;
 
         $subtitle = get_post_meta($slide->ID, '_oreh_slide_subtitle', true);
@@ -205,9 +207,10 @@ function oreh_get_slides() {
 
         // Фото целиком не доходит до краёв блока, поэтому растушёвываем те его края,
         // которые граничат с фоном, — иначе на стыке получается резкая линия.
+        // Растушёвка — часть затемнения: выключено затемнение, выключены и края.
         $fade_start = '0%';
         $fade_end   = '100%';
-        if ($fit_desktop === 'contain') {
+        if ($fit_desktop === 'contain' && $overlay !== 'off') {
             if ($pos_x_desktop >= 90) {
                 $fade_start = '20%';
             } elseif ($pos_x_desktop <= 10) {
