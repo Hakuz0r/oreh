@@ -49,6 +49,14 @@ function oreh_slide_overlay_options() {
     ];
 }
 
+function oreh_slide_fit_options() {
+    return [
+        'auto'    => __('Авто (по пропорциям фото)', 'oreh'),
+        'cover'   => __('Заполнить блок — края обрезаются', 'oreh'),
+        'contain' => __('Показать фото целиком', 'oreh'),
+    ];
+}
+
 function oreh_render_slide_meta_box($post) {
     wp_nonce_field('oreh_slide_save', 'oreh_slide_nonce');
 
@@ -59,6 +67,12 @@ function oreh_render_slide_meta_box($post) {
     if ($overlay === '') {
         $overlay = 'normal';
     }
+    $fit = get_post_meta($post->ID, '_oreh_slide_fit', true);
+    if (!array_key_exists($fit, oreh_slide_fit_options())) {
+        $fit = 'auto';
+    }
+    $pos_x = get_post_meta($post->ID, '_oreh_slide_pos_x', true);
+    $pos_y = get_post_meta($post->ID, '_oreh_slide_pos_y', true);
     ?>
     <p>
         <label for="oreh_slide_subtitle"><strong><?php esc_html_e('Подзаголовок', 'oreh'); ?></strong></label><br />
@@ -80,6 +94,25 @@ function oreh_render_slide_meta_box($post) {
             <?php endforeach; ?>
         </select>
         <p class="description"><?php esc_html_e('Затемняет фото под текстом, чтобы заголовок и кнопка оставались читаемыми. Если фото и так тёмное или спокойное — можно ослабить или выключить.', 'oreh'); ?></p>
+    </p>
+    <p>
+        <label for="oreh_slide_fit"><strong><?php esc_html_e('Масштаб фото', 'oreh'); ?></strong></label><br />
+        <select id="oreh_slide_fit" name="oreh_slide_fit">
+            <?php foreach (oreh_slide_fit_options() as $value => $label) : ?>
+                <option value="<?php echo esc_attr($value); ?>" <?php selected($fit, $value); ?>><?php echo esc_html($label); ?></option>
+            <?php endforeach; ?>
+        </select>
+        <p class="description"><?php esc_html_e('«Авто» — вертикальные фото на широком экране показываются целиком и прижимаются вправо, горизонтальные растягиваются на весь баннер. Если фото на десктопе выглядит слишком приближенным — поставьте «Показать фото целиком».', 'oreh'); ?></p>
+    </p>
+    <p>
+        <label for="oreh_slide_pos_x"><strong><?php esc_html_e('Положение фото по горизонтали, %', 'oreh'); ?></strong></label><br />
+        <input type="number" min="0" max="100" step="1" id="oreh_slide_pos_x" name="oreh_slide_pos_x" value="<?php echo esc_attr($pos_x); ?>" placeholder="50" />
+        <p class="description"><?php esc_html_e('0 — прижать к левому краю, 50 — по центру, 100 — к правому. Пусто — как решит «Авто».', 'oreh'); ?></p>
+    </p>
+    <p>
+        <label for="oreh_slide_pos_y"><strong><?php esc_html_e('Положение фото по вертикали, %', 'oreh'); ?></strong></label><br />
+        <input type="number" min="0" max="100" step="1" id="oreh_slide_pos_y" name="oreh_slide_pos_y" value="<?php echo esc_attr($pos_y); ?>" placeholder="36" />
+        <p class="description"><?php esc_html_e('Какая часть фото остаётся видимой при обрезке: 0 — верх, 50 — центр, 100 — низ. Если обрезает головы — поставьте 0–20.', 'oreh'); ?></p>
     </p>
     <p class="description"><?php esc_html_e('Не забудьте задать «Фон слайда» справа (изображение записи) — это фото на слайде. Порядок слайдов задаётся перетаскиванием в списке «Слайды баннера».', 'oreh'); ?></p>
     <?php
@@ -108,6 +141,21 @@ add_action('save_post_oreh_slide', function ($post_id) {
     if (isset($_POST['oreh_slide_overlay']) && array_key_exists($_POST['oreh_slide_overlay'], oreh_slide_overlay_options())) {
         update_post_meta($post_id, '_oreh_slide_overlay', sanitize_key($_POST['oreh_slide_overlay']));
     }
+    if (isset($_POST['oreh_slide_fit']) && array_key_exists($_POST['oreh_slide_fit'], oreh_slide_fit_options())) {
+        update_post_meta($post_id, '_oreh_slide_fit', sanitize_key($_POST['oreh_slide_fit']));
+    }
+    foreach (['pos_x', 'pos_y'] as $axis) {
+        $field = 'oreh_slide_' . $axis;
+        if (!isset($_POST[$field])) {
+            continue;
+        }
+        $value = trim(wp_unslash($_POST[$field]));
+        if ($value === '') {
+            delete_post_meta($post_id, '_oreh_slide_' . $axis);
+        } else {
+            update_post_meta($post_id, '_oreh_slide_' . $axis, max(0, min(100, (int) $value)));
+        }
+    }
 });
 
 /**
@@ -130,15 +178,40 @@ function oreh_get_slides() {
             $overlay = 'normal';
         }
 
+        $fit = get_post_meta($slide->ID, '_oreh_slide_fit', true);
+        if (!array_key_exists($fit, oreh_slide_fit_options())) {
+            $fit = 'auto';
+        }
+
+        // Вертикальное фото, растянутое на всю ширину десктопного баннера,
+        // превращается в бессмысленный кроп, поэтому в «Авто» показываем его целиком.
+        $thumb_meta = wp_get_attachment_metadata(get_post_thumbnail_id($slide->ID));
+        $is_tall    = !empty($thumb_meta['width']) && !empty($thumb_meta['height'])
+            && $thumb_meta['height'] >= $thumb_meta['width'];
+
+        $fit_desktop = $fit === 'auto' ? ($is_tall ? 'contain' : 'cover') : $fit;
+        $fit_mobile  = $fit === 'auto' ? 'cover' : $fit;
+
+        $pos_x_raw = get_post_meta($slide->ID, '_oreh_slide_pos_x', true);
+        $pos_y_raw = get_post_meta($slide->ID, '_oreh_slide_pos_y', true);
+        $pos_x = $pos_x_raw === '' ? 50 : max(0, min(100, (int) $pos_x_raw));
+        $pos_y = $pos_y_raw === '' ? 36 : max(0, min(100, (int) $pos_y_raw));
+        // Фото целиком на десктопе прижимаем вправо, чтобы оно не лезло под текст.
+        $pos_x_desktop = ($pos_x_raw === '' && $fit_desktop === 'contain') ? 100 : $pos_x;
+
         return [
-            'id'         => $slide->ID,
-            'title'      => get_the_title($slide),
-            'subtitle'   => get_post_meta($slide->ID, '_oreh_slide_subtitle', true),
-            'has_button' => $btn_text !== '' || $btn_url !== '',
-            'btn_text'   => $btn_text !== '' ? $btn_text : __('Выбрать оборудование', 'oreh'),
-            'btn_url'    => $btn_url !== '' ? $btn_url : '#equipment',
-            'overlay'    => $overlay,
-            'image'      => get_the_post_thumbnail_url($slide->ID, 'full'),
+            'id'          => $slide->ID,
+            'title'       => get_the_title($slide),
+            'subtitle'    => get_post_meta($slide->ID, '_oreh_slide_subtitle', true),
+            'has_button'  => $btn_text !== '' || $btn_url !== '',
+            'btn_text'    => $btn_text !== '' ? $btn_text : __('Выбрать оборудование', 'oreh'),
+            'btn_url'     => $btn_url !== '' ? $btn_url : '#equipment',
+            'overlay'     => $overlay,
+            'image'       => get_the_post_thumbnail_url($slide->ID, 'full'),
+            'fit_desktop' => $fit_desktop,
+            'fit_mobile'  => $fit_mobile,
+            'pos_desktop' => $pos_x_desktop . '% ' . $pos_y . '%',
+            'pos_mobile'  => $pos_x . '% ' . $pos_y . '%',
         ];
     }, $slides);
 }

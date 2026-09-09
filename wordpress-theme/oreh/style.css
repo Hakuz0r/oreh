@@ -413,12 +413,19 @@ select {
   display: none;
   align-items: center;
   background-color: var(--color-bg-soft);
-  background-size: cover;
-  background-position: 50% 36%;
 }
 
 .hero-slider__slide.is-active {
   display: flex;
+}
+
+.hero-slider__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: var(--hero-fit, cover);
+  object-position: var(--hero-pos, 50% 36%);
 }
 
 .hero-slider__overlay {

@@ -14,8 +14,16 @@ $oreh_slides  = oreh_get_slides();
       <div
         class="hero-slider__slide<?php echo $i === 0 ? ' is-active' : ''; ?>"
         data-slide
-        <?php if ($slide['image']) : ?>style="background-image: url('<?php echo esc_url($slide['image']); ?>');"<?php endif; ?>
+        style="--hero-fit: <?php echo esc_attr($slide['fit_desktop']); ?>; --hero-fit-mobile: <?php echo esc_attr($slide['fit_mobile']); ?>; --hero-pos: <?php echo esc_attr($slide['pos_desktop']); ?>; --hero-pos-mobile: <?php echo esc_attr($slide['pos_mobile']); ?>;"
       >
+        <?php if ($slide['image']) : ?>
+          <img
+            class="hero-slider__image"
+            src="<?php echo esc_url($slide['image']); ?>"
+            alt="<?php echo esc_attr($slide['title']); ?>"
+            <?php echo $i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'; ?>
+          />
+        <?php endif; ?>
         <?php if ($slide['overlay'] !== 'off') : ?>
           <div class="hero-slider__overlay<?php echo $slide['overlay'] !== 'normal' ? ' hero-slider__overlay--' . esc_attr($slide['overlay']) : ''; ?>"></div>
         <?php endif; ?>
