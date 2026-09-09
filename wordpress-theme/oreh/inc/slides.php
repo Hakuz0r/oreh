@@ -192,17 +192,21 @@ function oreh_get_slides() {
         $fit_desktop = $fit === 'auto' ? ($is_tall ? 'contain' : 'cover') : $fit;
         $fit_mobile  = $fit === 'auto' ? 'cover' : $fit;
 
+        $subtitle = get_post_meta($slide->ID, '_oreh_slide_subtitle', true);
+        $has_text = get_the_title($slide) !== '' || $subtitle !== '';
+
         $pos_x_raw = get_post_meta($slide->ID, '_oreh_slide_pos_x', true);
         $pos_y_raw = get_post_meta($slide->ID, '_oreh_slide_pos_y', true);
         $pos_x = $pos_x_raw === '' ? 50 : max(0, min(100, (int) $pos_x_raw));
         $pos_y = $pos_y_raw === '' ? 36 : max(0, min(100, (int) $pos_y_raw));
-        // Фото целиком на десктопе прижимаем вправо, чтобы оно не лезло под текст.
-        $pos_x_desktop = ($pos_x_raw === '' && $fit_desktop === 'contain') ? 100 : $pos_x;
+        // Фото целиком на десктопе прижимаем вправо, чтобы оно не лезло под текст;
+        // на слайде без текста освобождать левый край не от чего — оставляем по центру.
+        $pos_x_desktop = ($pos_x_raw === '' && $fit_desktop === 'contain' && $has_text) ? 100 : $pos_x;
 
         return [
             'id'          => $slide->ID,
             'title'       => get_the_title($slide),
-            'subtitle'    => get_post_meta($slide->ID, '_oreh_slide_subtitle', true),
+            'subtitle'    => $subtitle,
             'has_button'  => $btn_text !== '' || $btn_url !== '',
             'btn_text'    => $btn_text !== '' ? $btn_text : __('Выбрать оборудование', 'oreh'),
             'btn_url'     => $btn_url !== '' ? $btn_url : '#equipment',

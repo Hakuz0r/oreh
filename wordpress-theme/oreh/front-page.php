@@ -12,7 +12,7 @@ $oreh_slides  = oreh_get_slides();
   <?php if ($oreh_slides) : ?>
     <?php foreach ($oreh_slides as $i => $slide) : ?>
       <div
-        class="hero-slider__slide<?php echo $i === 0 ? ' is-active' : ''; ?>"
+        class="hero-slider__slide<?php echo $i === 0 ? ' is-active' : ''; ?><?php echo $slide['overlay'] !== 'off' ? ' hero-slider__slide--panel' : ''; ?>"
         data-slide
         style="--hero-fit: <?php echo esc_attr($slide['fit_desktop']); ?>; --hero-fit-mobile: <?php echo esc_attr($slide['fit_mobile']); ?>; --hero-pos: <?php echo esc_attr($slide['pos_desktop']); ?>; --hero-pos-mobile: <?php echo esc_attr($slide['pos_mobile']); ?>;"
       >
