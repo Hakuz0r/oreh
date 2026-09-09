@@ -203,6 +203,21 @@ function oreh_get_slides() {
         // на слайде без текста освобождать левый край не от чего — оставляем по центру.
         $pos_x_desktop = ($pos_x_raw === '' && $fit_desktop === 'contain' && $has_text) ? 100 : $pos_x;
 
+        // Фото целиком не доходит до краёв блока, поэтому растушёвываем те его края,
+        // которые граничат с фоном, — иначе на стыке получается резкая линия.
+        $fade_start = '0%';
+        $fade_end   = '100%';
+        if ($fit_desktop === 'contain') {
+            if ($pos_x_desktop >= 90) {
+                $fade_start = '20%';
+            } elseif ($pos_x_desktop <= 10) {
+                $fade_end = '80%';
+            } else {
+                $fade_start = '14%';
+                $fade_end   = '86%';
+            }
+        }
+
         return [
             'id'          => $slide->ID,
             'title'       => get_the_title($slide),
@@ -216,6 +231,10 @@ function oreh_get_slides() {
             'fit_mobile'  => $fit_mobile,
             'pos_desktop' => $pos_x_desktop . '% ' . $pos_y . '%',
             'pos_mobile'  => $pos_x . '% ' . $pos_y . '%',
+            'is_whole'    => $fit_desktop === 'contain',
+            'x_desktop'   => $pos_x_desktop . '%',
+            'fade_start'  => $fade_start,
+            'fade_end'    => $fade_end,
         ];
     }, $slides);
 }
