@@ -401,9 +401,12 @@ select {
 
 /* ---------- hero slider ---------- */
 
+/* Фиксированная пропорция, а не высота от экрана: только так картинка-баннер
+   от дизайнера (2400×1000) ложится один в один на любом мониторе, без обрезки.
+   На телефонах своя пропорция 3:4 — см. adaptive.css. */
 .hero-slider {
   position: relative;
-  min-height: clamp(460px, 72vh, 820px);
+  aspect-ratio: 12 / 5;
   overflow: hidden;
 }
 
@@ -443,6 +446,21 @@ select {
   mask-image: linear-gradient(90deg, transparent 0%, #000 var(--hero-fade-start, 0%), #000 var(--hero-fade-end, 100%), transparent 100%);
 }
 
+/* «Готовый баннер»: текст и инфографика уже на картинке. Показываем её целиком
+   (contain — если размер по ТЗ, полей не будет; если нет — поля, но не обрезка),
+   а заголовок слайда оставляем только для поисковиков и скринридеров. */
+.hero-slider__slide--banner .hero-slider__inner {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .hero-slider__overlay {
   position: absolute;
   inset: 0;
@@ -477,7 +495,9 @@ select {
   width: 100%;
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: clamp(40px, 6vw, 80px) clamp(16px, 5vw, 56px);
+  /* Боковой отступ не меньше, чем занимает стрелка слайдера (left + 44px),
+     иначе на средних экранах стрелка ложится поверх заголовка. */
+  padding: clamp(40px, 6vw, 80px) max(clamp(16px, 5vw, 56px), calc(clamp(12px, 2vw, 28px) + 60px));
 }
 
 .hero-slider__content {

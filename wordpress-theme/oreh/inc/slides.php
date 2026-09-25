@@ -54,8 +54,16 @@ function oreh_slide_fit_options() {
         'auto'    => __('Авто (по пропорциям фото)', 'oreh'),
         'cover'   => __('Заполнить блок — края обрезаются', 'oreh'),
         'contain' => __('Показать фото целиком', 'oreh'),
+        'banner'  => __('Готовый баннер — текст уже на картинке', 'oreh'),
     ];
 }
+
+add_action('admin_enqueue_scripts', function () {
+    $screen = get_current_screen();
+    if ($screen && $screen->post_type === 'oreh_slide') {
+        wp_enqueue_media();
+    }
+});
 
 function oreh_render_slide_meta_box($post) {
     wp_nonce_field('oreh_slide_save', 'oreh_slide_nonce');
@@ -73,7 +81,13 @@ function oreh_render_slide_meta_box($post) {
     }
     $pos_x = get_post_meta($post->ID, '_oreh_slide_pos_x', true);
     $pos_y = get_post_meta($post->ID, '_oreh_slide_pos_y', true);
+    $mobile_id  = (int) get_post_meta($post->ID, '_oreh_slide_image_mobile', true);
+    $mobile_url = $mobile_id ? wp_get_attachment_image_url($mobile_id, 'medium') : '';
     ?>
+    <div style="padding:12px 14px;margin:6px 0 14px;background:#f0f6fc;border-left:4px solid #2271b1;">
+        <strong><?php esc_html_e('Готовый баннер от дизайнера (текст и инфографика на картинке):', 'oreh'); ?></strong><br />
+        <?php esc_html_e('«Фон слайда» справа — 2400×1000 px (компьютер), «Фото для мобильной версии» ниже — 1080×1440 px (телефон), «Масштаб фото» — «Готовый баннер». Тогда картинка встанет целиком, без обрезки. Загружайте файлом, не через мессенджер.', 'oreh'); ?>
+    </div>
     <p>
         <label for="oreh_slide_subtitle"><strong><?php esc_html_e('Подзаголовок', 'oreh'); ?></strong></label><br />
         <input type="text" id="oreh_slide_subtitle" name="oreh_slide_subtitle" value="<?php echo esc_attr($subtitle); ?>" class="widefat" />
@@ -102,8 +116,42 @@ function oreh_render_slide_meta_box($post) {
                 <option value="<?php echo esc_attr($value); ?>" <?php selected($fit, $value); ?>><?php echo esc_html($label); ?></option>
             <?php endforeach; ?>
         </select>
-        <p class="description"><?php esc_html_e('«Авто» — вертикальные фото на широком экране показываются целиком и прижимаются вправо, горизонтальные растягиваются на весь баннер. Если затемнение выключено, фото всегда занимает баннер целиком — тогда кадр подбирается полем «Положение фото по вертикали». Если фото на десктопе выглядит слишком приближенным — поставьте «Показать фото целиком».', 'oreh'); ?></p>
+        <p class="description"><?php esc_html_e('«Авто» — фото справа от текста слайда (или на весь баннер, если затемнение выключено). «Готовый баннер» — картинка показывается целиком как есть, без затемнения; заголовок, подзаголовок и кнопка слайда на сайте не выводятся (заголовок всё равно заполните — по нему слайд видно в списке и в поиске).', 'oreh'); ?></p>
     </p>
+    <p>
+        <strong><?php esc_html_e('Фото для мобильной версии', 'oreh'); ?></strong><br />
+        <input type="hidden" id="oreh_slide_image_mobile" name="oreh_slide_image_mobile" value="<?php echo esc_attr($mobile_id ?: ''); ?>" />
+        <img id="oreh_slide_image_mobile_preview" src="<?php echo esc_url($mobile_url); ?>" alt="" style="display:<?php echo $mobile_url ? 'block' : 'none'; ?>;max-width:180px;height:auto;margin:6px 0;border:1px solid #dcdcde;" />
+        <button type="button" class="button" id="oreh_slide_image_mobile_pick"><?php esc_html_e('Выбрать фото', 'oreh'); ?></button>
+        <button type="button" class="button-link" id="oreh_slide_image_mobile_clear" style="margin-left:8px;display:<?php echo $mobile_url ? 'inline' : 'none'; ?>;"><?php esc_html_e('Убрать', 'oreh'); ?></button>
+        <p class="description"><?php esc_html_e('Показывается на телефонах вместо «Фона слайда». Размер 1080×1440 px (вертикальное 3:4, как карточка Wildberries). Не задано — на телефоне будет основное фото.', 'oreh'); ?></p>
+    </p>
+    <script>
+    (function () {
+        var input = document.getElementById('oreh_slide_image_mobile');
+        var preview = document.getElementById('oreh_slide_image_mobile_preview');
+        var clear = document.getElementById('oreh_slide_image_mobile_clear');
+        var frame;
+        document.getElementById('oreh_slide_image_mobile_pick').addEventListener('click', function () {
+            if (!frame) {
+                frame = wp.media({ title: 'Фото для мобильной версии', library: { type: 'image' }, multiple: false });
+                frame.on('select', function () {
+                    var a = frame.state().get('selection').first().toJSON();
+                    input.value = a.id;
+                    preview.src = (a.sizes && a.sizes.medium ? a.sizes.medium.url : a.url);
+                    preview.style.display = 'block';
+                    clear.style.display = 'inline';
+                });
+            }
+            frame.open();
+        });
+        clear.addEventListener('click', function () {
+            input.value = '';
+            preview.style.display = 'none';
+            clear.style.display = 'none';
+        });
+    })();
+    </script>
     <p>
         <label for="oreh_slide_pos_x"><strong><?php esc_html_e('Положение фото по горизонтали, %', 'oreh'); ?></strong></label><br />
         <input type="number" min="0" max="100" step="1" id="oreh_slide_pos_x" name="oreh_slide_pos_x" value="<?php echo esc_attr($pos_x); ?>" placeholder="50" />
@@ -143,6 +191,14 @@ add_action('save_post_oreh_slide', function ($post_id) {
     }
     if (isset($_POST['oreh_slide_fit']) && array_key_exists($_POST['oreh_slide_fit'], oreh_slide_fit_options())) {
         update_post_meta($post_id, '_oreh_slide_fit', sanitize_key($_POST['oreh_slide_fit']));
+    }
+    if (isset($_POST['oreh_slide_image_mobile'])) {
+        $mobile_id = absint($_POST['oreh_slide_image_mobile']);
+        if ($mobile_id && wp_attachment_is_image($mobile_id)) {
+            update_post_meta($post_id, '_oreh_slide_image_mobile', $mobile_id);
+        } else {
+            delete_post_meta($post_id, '_oreh_slide_image_mobile');
+        }
     }
     foreach (['pos_x', 'pos_y'] as $axis) {
         $field = 'oreh_slide_' . $axis;
@@ -190,22 +246,30 @@ function oreh_get_slides() {
         // ширины справа (не зависит от пропорций фото — так градиент затемнения
         // можно погасить ровно на границе колонки, без нахлёста на фото). Слайд без
         // текста или с выключенным затемнением — фото на весь баннер, как раньше.
+        // «Готовый баннер» — картинка целиком, без затемнения и без текста сайта поверх.
+        $is_banner = $fit === 'banner';
+        if ($is_banner) {
+            $overlay = 'off';
+        }
+
         $is_panel = $fit === 'auto' && $has_text && $overlay !== 'off';
         if ($fit === 'auto') {
             $fit_desktop = $is_panel ? 'panel' : 'cover';
+        } elseif ($is_banner) {
+            $fit_desktop = 'contain';
         } else {
             $fit_desktop = $fit;
         }
-        $fit_mobile = $fit === 'auto' ? 'cover' : $fit;
+        $fit_mobile = $fit === 'auto' ? 'cover' : ($is_banner ? 'contain' : $fit);
         $fit_css    = $fit_desktop === 'panel' ? 'cover' : $fit_desktop;
 
         $pos_x_raw = get_post_meta($slide->ID, '_oreh_slide_pos_x', true);
         $pos_y_raw = get_post_meta($slide->ID, '_oreh_slide_pos_y', true);
         $pos_x = $pos_x_raw === '' ? 50 : max(0, min(100, (int) $pos_x_raw));
-        $pos_y = $pos_y_raw === '' ? 36 : max(0, min(100, (int) $pos_y_raw));
+        $pos_y = $pos_y_raw === '' ? ($is_banner ? 50 : 36) : max(0, min(100, (int) $pos_y_raw));
         // Колонку с фото (панель и «показать целиком») по умолчанию прижимаем
         // вправо, чтобы она не лезла под текст; на слайде без текста — по центру.
-        $is_column     = in_array($fit_desktop, ['panel', 'contain'], true);
+        $is_column     = !$is_banner && in_array($fit_desktop, ['panel', 'contain'], true);
         $pos_x_desktop = ($pos_x_raw === '' && $is_column && $has_text) ? 100 : $pos_x;
 
         // «Показать целиком» — истинный контейн, ширина колонки идёт от пропорций
@@ -242,6 +306,8 @@ function oreh_get_slides() {
             'btn_url'     => $btn_url !== '' ? $btn_url : '#equipment',
             'overlay'     => $overlay,
             'image'       => get_the_post_thumbnail_url($slide->ID, 'full'),
+            'image_mobile' => (string) wp_get_attachment_image_url((int) get_post_meta($slide->ID, '_oreh_slide_image_mobile', true), 'full'),
+            'is_banner'   => $is_banner,
             'fit_desktop' => $fit_css,
             'fit_mobile'  => $fit_mobile,
             'pos_desktop' => $pos_x_desktop . '% ' . $pos_y . '%',

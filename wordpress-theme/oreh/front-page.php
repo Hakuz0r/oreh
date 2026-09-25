@@ -12,17 +12,22 @@ $oreh_slides  = oreh_get_slides();
   <?php if ($oreh_slides) : ?>
     <?php foreach ($oreh_slides as $i => $slide) : ?>
       <div
-        class="hero-slider__slide<?php echo $i === 0 ? ' is-active' : ''; ?><?php echo $slide['overlay'] !== 'off' ? ' hero-slider__slide--panel' : ''; ?><?php echo $slide['is_column'] ? ' hero-slider__slide--whole' : ''; ?><?php echo $slide['is_panel'] ? ' hero-slider__slide--panel-photo' : ''; ?>"
+        class="hero-slider__slide<?php echo $i === 0 ? ' is-active' : ''; ?><?php echo $slide['overlay'] !== 'off' ? ' hero-slider__slide--panel' : ''; ?><?php echo $slide['is_column'] ? ' hero-slider__slide--whole' : ''; ?><?php echo $slide['is_panel'] ? ' hero-slider__slide--panel-photo' : ''; ?><?php echo $slide['is_banner'] ? ' hero-slider__slide--banner' : ''; ?>"
         data-slide
         style="--hero-fit: <?php echo esc_attr($slide['fit_desktop']); ?>; --hero-fit-mobile: <?php echo esc_attr($slide['fit_mobile']); ?>; --hero-pos: <?php echo esc_attr($slide['pos_desktop']); ?>; --hero-pos-mobile: <?php echo esc_attr($slide['pos_mobile']); ?>; --hero-x: <?php echo esc_attr($slide['x_desktop']); ?>; --hero-photo-width: <?php echo esc_attr($slide['photo_width']); ?>; --hero-fade-start: <?php echo esc_attr($slide['fade_start']); ?>; --hero-fade-end: <?php echo esc_attr($slide['fade_end']); ?>; --hero-fade-mobile: <?php echo esc_attr($slide['fade_mobile']); ?>;"
       >
         <?php if ($slide['image']) : ?>
-          <img
-            class="hero-slider__image"
-            src="<?php echo esc_url($slide['image']); ?>"
-            alt="<?php echo esc_attr($slide['title']); ?>"
-            <?php echo $i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'; ?>
-          />
+          <picture>
+            <?php if ($slide['image_mobile']) : ?>
+              <source media="(max-width: 680px)" srcset="<?php echo esc_url($slide['image_mobile']); ?>" />
+            <?php endif; ?>
+            <img
+              class="hero-slider__image"
+              src="<?php echo esc_url($slide['image']); ?>"
+              alt="<?php echo esc_attr($slide['title']); ?>"
+              <?php echo $i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'; ?>
+            />
+          </picture>
         <?php endif; ?>
         <?php if ($slide['overlay'] !== 'off') : ?>
           <div class="hero-slider__overlay<?php echo $slide['overlay'] !== 'normal' ? ' hero-slider__overlay--' . esc_attr($slide['overlay']) : ''; ?>"></div>
@@ -37,7 +42,7 @@ $oreh_slides  = oreh_get_slides();
             <?php if ($slide['subtitle']) : ?>
               <p class="hero-slider__subtitle"><?php echo esc_html($slide['subtitle']); ?></p>
             <?php endif; ?>
-            <?php if ($slide['has_button']) : ?>
+            <?php if ($slide['has_button'] && !$slide['is_banner']) : ?>
               <div class="hero-slider__actions">
                 <a href="<?php echo esc_url($slide['btn_url']); ?>" class="btn btn--primary"><?php echo esc_html($slide['btn_text']); ?></a>
               </div>
