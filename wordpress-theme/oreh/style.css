@@ -410,6 +410,14 @@ select {
   overflow: hidden;
 }
 
+/* Safari < 15 не знает aspect-ratio — слайды там absolute, и без высоты баннер
+   схлопнулся бы в ноль. Баннер во всю ширину окна, поэтому та же пропорция через vw. */
+@supports not (aspect-ratio: 1 / 1) {
+  .hero-slider {
+    height: 41.6667vw;
+  }
+}
+
 .hero-slider__slide {
   position: absolute;
   inset: 0;

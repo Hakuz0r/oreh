@@ -69,6 +69,12 @@
     aspect-ratio: 3 / 4;
   }
 
+  @supports not (aspect-ratio: 1 / 1) {
+    .hero-slider {
+      height: 133.3333vw;
+    }
+  }
+
   .hero-slider__slide {
     align-items: flex-start;
   }
