@@ -65,15 +65,6 @@
     width: 100%;
   }
 
-  .hero-slider {
-    aspect-ratio: 3 / 4;
-  }
-
-  @supports not (aspect-ratio: 1 / 1) {
-    .hero-slider {
-      height: 133.3333vw;
-    }
-  }
 
   .hero-slider__slide {
     align-items: flex-start;
@@ -110,11 +101,37 @@
      всегда стыкуется с плашкой без зазора и без резкой линии, независимо от
      того, сколько строк в заголовке. Цвет плашки и фона слайда совпадают
      (--color-bg-soft), поэтому фото растворяется именно в него. */
+  /* На телефоне слайд не фиксированной высоты: текст сверху, фото под ним
+     в своей натуральной пропорции. Раньше фото лежало слоем под текстом в
+     блоке 3:4, и на узких экранах текст срезал его верх. Неактивные слайды
+     скрыты (display:none), поэтому высоту задаёт активный. */
+  .hero-slider {
+    aspect-ratio: auto;
+    height: auto;
+  }
+
+  .hero-slider__slide.is-active {
+    position: relative;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-slider__slide picture {
+    display: block;
+    order: 2;
+  }
+
+  .hero-slider__slide .hero-slider__image,
+  .hero-slider__slide--whole .hero-slider__image {
+    position: static;
+    width: 100%;
+    height: auto;
+    transform: none;
+  }
+
   .hero-slider__slide--panel .hero-slider__image {
-    top: auto;
-    height: 68%;
-    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 var(--hero-fade-mobile, 22%));
-    mask-image: linear-gradient(180deg, transparent 0%, #000 var(--hero-fade-mobile, 22%));
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 28px);
+    mask-image: linear-gradient(180deg, transparent 0, #000 28px);
   }
 
   /* Плёнка поверх всего фото не нужна — плашка под текстом уже сплошная. */
