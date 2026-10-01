@@ -13,6 +13,8 @@ function oreh_customizer_defaults() {
         'oreh_email'       => 'info@oreh.ru',
         'oreh_hours'       => 'Пн — Сб, 10:00 — 19:00',
         'oreh_leads_email' => '',
+        'oreh_telegram'    => 'https://t.me/oreh_gym',
+        'oreh_max'         => '',
 
         // Верхний блок
         'oreh_intro_title'    => 'TriaMotion 3 In 1',
@@ -90,6 +92,23 @@ add_action('customize_register', function ($wp_customize) {
         'section'     => 'oreh_contacts',
         'type'        => 'email',
     ]);
+
+    foreach ([
+        'oreh_telegram' => [__('Ссылка на Telegram', 'oreh'), 'https://t.me/oreh_gym'],
+        'oreh_max'      => [__('Ссылка на MAX', 'oreh'), __('В MAX: профиль → «Поделиться» → скопировать ссылку', 'oreh')],
+    ] as $id => [$label, $hint]) {
+        $wp_customize->add_setting($id, [
+            'default'           => $defaults[$id],
+            'sanitize_callback' => 'esc_url_raw',
+            'transport'         => 'refresh',
+        ]);
+        $wp_customize->add_control($id, [
+            'label'       => $label,
+            'description' => $hint . '. ' . __('Пусто — кнопка не показывается.', 'oreh'),
+            'section'     => 'oreh_contacts',
+            'type'        => 'url',
+        ]);
+    }
 
     // --- Главный экран ---
     $wp_customize->add_section('oreh_hero', [
